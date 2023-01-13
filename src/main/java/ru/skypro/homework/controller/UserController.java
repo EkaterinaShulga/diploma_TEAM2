@@ -23,6 +23,7 @@ public class UserController {
     public UserController(UserServiceImpl userService) {
         this.userService = userService;
     }
+
     @PostMapping("/add")
     public CreateUserDto addUser(@RequestBody CreateUserDto updatedUserDto) {
         logger.info("Processing addUser Controller");
