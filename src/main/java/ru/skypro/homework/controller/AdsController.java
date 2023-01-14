@@ -31,9 +31,11 @@ import java.util.List;
 @RestController
 @CrossOrigin(value = "http://localhost:3000")
 @RequestMapping("/ads")
-public class AdsController {
-    private Logger logger = LoggerFactory.getLogger(AdsController.class);
 
+
+public class AdsController {
+
+    private final Logger logger = LoggerFactory.getLogger(AdsController.class);
     private final AdsServiceImpl adsService;
     private final CommentServiceImpl commentService;
 
