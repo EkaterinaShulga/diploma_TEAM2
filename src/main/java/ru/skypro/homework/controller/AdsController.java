@@ -17,6 +17,7 @@ import ru.skypro.homework.dto.AdsCommentDto;
 import java.util.ArrayList;
 import java.util.List;
 
+
 @RestController
 @CrossOrigin(value = "http://localhost:3000")
 @RequestMapping("/ads")
@@ -60,11 +61,6 @@ public class AdsController {
         //Service обновления объявления в БД, возвращаем обновленный объект
         return updatedAdsDto;
     }
-
-
-public class AdsController {
-
-    private final Logger logger = LoggerFactory.getLogger(AdsController.class);
 
     @PostMapping("/{ad_pk}/comment")
     public AdsCommentDto addAdsComments(@RequestBody AdsCommentDto adsCommentDto,
