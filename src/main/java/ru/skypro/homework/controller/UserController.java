@@ -20,6 +20,7 @@ import java.util.Collection;
 @RequestMapping("/users")
 public class UserController {
     private Logger logger = LoggerFactory.getLogger(AdsController.class);
+    private final UserServiceImpl userService;
     public UserController(UserServiceImpl userService) {
         this.userService = userService;
     }
@@ -36,9 +37,7 @@ public class UserController {
         } catch (UserAlreadyCreatedException exception) {
             throw new ResponseStatusException(HttpStatus.CREATED);
         }
-
-    private final UserServiceImpl userService;
-
+    }
 
 
     @PatchMapping("/me")
