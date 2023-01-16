@@ -11,18 +11,10 @@ import ru.skypro.homework.service.impl.AdsServiceImpl;
 import ru.skypro.homework.service.impl.CommentServiceImpl;
 
 import java.util.Collection;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
-import ru.skypro.homework.dto.ads.AdsDto;
 import ru.skypro.homework.dto.ads.FullAdsDto;
 
 import java.util.Optional;
-
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 import ru.skypro.homework.dto.AdsCommentDto;
 
 import java.util.ArrayList;
@@ -34,48 +26,6 @@ import java.util.List;
 public class AdsController {
     private Logger logger = LoggerFactory.getLogger(AdsController.class);
 
-    @GetMapping(value = "/{id}")
-    public FullAdsDto getAds(@PathVariable("id") long adsId) {
-        logger.info("Precessing getAds Controller");
-        FullAdsDto fullAdsDto = new FullAdsDto(); // Service getMap
-
-//        if (null == fullAdsDto) {
-//            throw new ResponseStatusException(
-//                    HttpStatus.NOT_FOUND
-//            );
-//        }
-        return fullAdsDto;
-    }
-
-    @DeleteMapping(value = "/{id}")
-    public Optional<HttpStatus> removeAds(@PathVariable("id") long adsId) {
-        logger.info("Processing removeAds Controller");
-        boolean isRemoveAds = false; // метод Service remove(adsId)
-
-        if (!isRemoveAds) {
-            return Optional.empty();
-        }
-
-        return Optional.of(HttpStatus.NO_CONTENT);
-    }
-
-    @PatchMapping(value = "/{id}")
-    public AdsDto updateAds(@PathVariable("id") long adsId, @RequestBody AdsDto updatedAdsDto) {
-        logger.info("Processing updateAds Controller");
-        AdsDto adsDto = new AdsDto();// Находим объявление Service findById
-//        if (null == adsDto) {
-//            throw new ResponseStatusException(
-//                    HttpStatus.NOT_FOUND
-//            );
-//        }
-        //Service обновления объявления в БД, возвращаем обновленный объект
-        return updatedAdsDto;
-    }
-
-
-public class AdsController {
-
-    private final Logger logger = LoggerFactory.getLogger(AdsController.class);
     private final AdsServiceImpl adsService;
     private final CommentServiceImpl commentService;
 
@@ -83,6 +33,7 @@ public class AdsController {
         this.adsService = adsService;
         this.commentService = commentService;
     }
+
     @GetMapping(value = "/{id}")
     public FullAdsDto getAds(@PathVariable("id") long adsId) {
         logger.info("Precessing getAds Controller");
@@ -109,7 +60,8 @@ public class AdsController {
     }
 
     @PatchMapping(value = "/{id}")
-    public AdsDto updateAds(@PathVariable("id") long adsId, @RequestBody AdsDto updatedAdsDto) {
+    public AdsDto updateAds(@PathVariable("id") long adsId,
+                            @RequestBody AdsDto updatedAdsDto) {
         logger.info("Processing updateAds Controller");
         AdsDto adsDto = new AdsDto();// Находим объявление Service findById
 //        if (null == adsDto) {
@@ -120,7 +72,6 @@ public class AdsController {
         //Service обновления объявления в БД, возвращаем обновленный объект
         return updatedAdsDto;
     }
-
 
     @GetMapping
     public ResponseEntity<AdsDto> getAds() {
@@ -136,9 +87,9 @@ public class AdsController {
     }
 
     @GetMapping("/{ad_pk}/comments")
-    public ResponseEntity<CommentDto> getComments(@PathVariable("ad_pk") Integer ad_pk) {
+    public ResponseEntity<CommentDto> getComments(@PathVariable("ad_pk") Integer adPk) {
         logger.info("Processing getComments Controller");
-        CommentDto commentDto = commentService.getComments(ad_pk);
+        CommentDto commentDto = commentService.getComments(adPk);
         return ResponseEntity.ok(commentDto);
     }
 
@@ -151,13 +102,13 @@ public class AdsController {
 
     @PostMapping("/{ad_pk}/comment")
     public AdsCommentDto addAdsComments(@RequestBody AdsCommentDto adsCommentDto,
-                                        @PathVariable("ad_pk") Integer ad_pk) {
+                                        @PathVariable("ad_pk") Integer AdPk) {
         logger.info("Create new AdsComment - addAdsComments");
         return new AdsCommentDto();
     }
 
     @DeleteMapping("/{ad_pk}/comment/{id}")
-    public ResponseEntity<AdsCommentDto> deleteAdsComment(@PathVariable("ad_pk") Integer ad_pk,
+    public ResponseEntity<AdsCommentDto> deleteAdsComment(@PathVariable("ad_pk") Integer adPk,
                                                           @PathVariable("id") Integer pkAdsComment) {
 
         AdsCommentDto adsComment = new AdsCommentDto(); //находим комментарий в БД
@@ -170,7 +121,7 @@ public class AdsController {
     }
 
     @GetMapping("/{ad_pk}/comment/{id}")
-    public List<AdsCommentDto> getAdsComments(@PathVariable("ad_pk") Integer ad_pk,
+    public List<AdsCommentDto> getAdsComments(@PathVariable("ad_pk") Integer adPk,
                                              @PathVariable("id") Integer pkAdsComment) {
         List<AdsCommentDto> adsComments = new ArrayList<>();//возвращаем
         AdsCommentDto adsComment = new AdsCommentDto(); //из базы
@@ -180,7 +131,7 @@ public class AdsController {
     }
 
     @PatchMapping("/{ad_pk}/comment/{id}")
-    public AdsCommentDto updateAdsComment(@PathVariable("ad_pk") Integer ad_pk,
+    public AdsCommentDto updateAdsComment(@PathVariable("ad_pk") Integer adPk,
                                           @PathVariable("id") Integer pkAdsComment,
                                           @RequestBody AdsCommentDto updateAdsComment) {
         AdsCommentDto commentDto = new AdsCommentDto();
