@@ -14,14 +14,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.Collection;
+
 import org.springframework.http.HttpStatus;
 import ru.skypro.homework.dto.ads.FullAdsDto;
 
 import java.util.Optional;
-import ru.skypro.homework.dto.AdsCommentDto;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @RestController
 @CrossOrigin(value = "http://localhost:3000")
@@ -38,7 +35,7 @@ public class AdsController {
     }
 
     @GetMapping(value = "/{id}")
-    public FullAdsDto getAds(@PathVariable("id") long adsId) {
+    public FullAdsDto getFullAd(@PathVariable("id") long adsId) {
         logger.info("Precessing getAds Controller");
         FullAdsDto fullAdsDto = new FullAdsDto(); // Service getMap
 
@@ -104,18 +101,18 @@ public class AdsController {
     }
 
     @PostMapping("/{ad_pk}/comment")
-    public AdsCommentDto addAdsComments(@RequestBody AdsCommentDto adsCommentDto,
-                                        @PathVariable("ad_pk") Integer AdPk) {
+    public CommentDto addComments(@RequestBody CommentDto commentDto,
+                                  @PathVariable("ad_pk") String adPk) {
         logger.info("Create new AdsComment - addAdsComments");
-        return new AdsCommentDto();
+        return new CommentDto();
     }
 
     @DeleteMapping("/{ad_pk}/comment/{id}")
-    public ResponseEntity<AdsCommentDto> deleteAdsComment(@PathVariable("ad_pk") Integer adPk,
-                                                          @PathVariable("id") Integer pkAdsComment) {
+    public ResponseEntity<CommentDto> deleteComments(@PathVariable("ad_pk") String adPk,
+                                                     @PathVariable("id") Integer id) {
 
-        AdsCommentDto adsComment = new AdsCommentDto(); //находим комментарий в БД
-        if (adsComment == null) {
+        CommentDto comment = new CommentDto(); //находим комментарий в БД
+        if (comment == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         } else {
             logger.info("delete AdsComment - deleteAdsComment");
@@ -123,23 +120,21 @@ public class AdsController {
         }
     }
 
-    @GetMapping("/{ad_pk}/comment/{id}")
-    public List<AdsCommentDto> getAdsComments(@PathVariable("ad_pk") Integer adPk,
-                                             @PathVariable("id") Integer pkAdsComment) {
-        List<AdsCommentDto> adsComments = new ArrayList<>();//возвращаем
-        AdsCommentDto adsComment = new AdsCommentDto(); //из базы
-        adsComments.add(adsComment);//все найденные комментарии
-        logger.info("return AdsComment - getAdsComment");
-        return adsComments;
+    @GetMapping("/{ad_pk}/comments/{id}")
+    public CommentDto getComments(@PathVariable("ad_pk") String adPk,
+                                  @PathVariable("id") Integer id) {
+        CommentDto commentDto = new CommentDto(); //из базы
+        logger.info("return AdsComment - getComments");
+        return commentDto;
     }
 
     @PatchMapping("/{ad_pk}/comment/{id}")
-    public AdsCommentDto updateAdsComment(@PathVariable("ad_pk") Integer adPk,
-                                          @PathVariable("id") Integer pkAdsComment,
-                                          @RequestBody AdsCommentDto updateAdsComment) {
-        AdsCommentDto commentDto = new AdsCommentDto();
-        logger.info("return new AdsComment - updateAdsComment");
-        return updateAdsComment;
+    public CommentDto updateComments(@PathVariable("ad_pk") String adPk,
+                                       @PathVariable("id") Integer pkAdsComment,
+                                       @RequestBody CommentDto comment) {
+        CommentDto commentDto = new CommentDto();
+        logger.info("return new AdsComment - updateComments");
+        return comment;
     }
 
     @PatchMapping(value = "/{id}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
