@@ -4,7 +4,7 @@ package ru.skypro.homework.service.impl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ru.skypro.homework.dto.AdsDto;
+import ru.skypro.homework.dto.ads.AdsDto;
 import ru.skypro.homework.service.AdsService;
 
 import java.util.Collection;
