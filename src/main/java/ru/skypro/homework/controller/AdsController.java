@@ -5,8 +5,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.skypro.homework.dto.CommentDto;
-import ru.skypro.homework.dto.ads.AdsDto;
+import ru.skypro.homework.dto.Ads.CommentDto;
+import ru.skypro.homework.dto.Ads.AdsDto;
 import ru.skypro.homework.service.impl.AdsServiceImpl;
 import ru.skypro.homework.service.impl.CommentServiceImpl;
 import org.springframework.http.MediaType;
@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.util.Collection;
 
 import org.springframework.http.HttpStatus;
-import ru.skypro.homework.dto.ads.FullAdsDto;
+import ru.skypro.homework.dto.Ads.FullAdsDto;
 
 import java.util.Optional;
 

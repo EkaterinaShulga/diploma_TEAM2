@@ -3,8 +3,8 @@ package ru.skypro.homework.service.impl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ru.skypro.homework.dto.Password;
-import ru.skypro.homework.dto.UserDto;
+import ru.skypro.homework.dto.User.Password;
+import ru.skypro.homework.dto.User.UserDto;
 import ru.skypro.homework.service.UserService;
 
 import java.util.Collection;

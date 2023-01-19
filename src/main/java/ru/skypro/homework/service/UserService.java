@@ -1,7 +1,7 @@
 package ru.skypro.homework.service;
 
-import ru.skypro.homework.dto.Password;
-import ru.skypro.homework.dto.UserDto;
+import ru.skypro.homework.dto.User.Password;
+import ru.skypro.homework.dto.User.UserDto;
 
 import java.util.Collection;
 

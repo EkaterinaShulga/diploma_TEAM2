@@ -1,6 +1,6 @@
 package ru.skypro.homework.service;
 
-import ru.skypro.homework.dto.ads.AdsDto;
+import ru.skypro.homework.dto.Ads.AdsDto;
 
 import java.util.Collection;
 
