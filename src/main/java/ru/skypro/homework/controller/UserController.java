@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.http.ResponseEntity;
-import ru.skypro.homework.dto.User.Password;
+import ru.skypro.homework.dto.User.PasswordDto;
 import ru.skypro.homework.dto.User.UserDto;
 import ru.skypro.homework.service.impl.UserServiceImpl;
 
@@ -21,7 +21,6 @@ public class UserController {
     public UserController(UserServiceImpl userService) {
         this.userService = userService;
     }
-
 
     @PatchMapping("/me")
     public ResponseEntity<UserDto> updateUser(@RequestBody UserDto user) {
@@ -39,7 +38,7 @@ public class UserController {
     }
 
     @PostMapping("/set_password")
-    public ResponseEntity<UserDto> setPassword(@RequestBody Password password) {
+    public ResponseEntity<UserDto> setPassword(@RequestBody PasswordDto password) {
         UserDto user = userService.changePassword(password);
         if (user == null) {
             return ResponseEntity.notFound().build();
