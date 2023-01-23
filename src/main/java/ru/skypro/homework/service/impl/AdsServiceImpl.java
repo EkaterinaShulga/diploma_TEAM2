@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.skypro.homework.dto.ads.AdsDto;
+import ru.skypro.homework.repositories.AdsRepository;
 import ru.skypro.homework.service.AdsService;
 
 import java.util.Collection;
@@ -13,6 +14,12 @@ import java.util.Collection;
 @Service
 public class AdsServiceImpl implements AdsService {
     private final Logger logger = LoggerFactory.getLogger(AdsServiceImpl.class);
+
+    private  final AdsRepository adsRepository;
+
+    public AdsServiceImpl(AdsRepository adsRepository){
+        this.adsRepository=adsRepository;
+    }
 
     @Override
     public AdsDto getAds() {

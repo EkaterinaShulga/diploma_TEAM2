@@ -2,7 +2,20 @@ package ru.skypro.homework.service;
 
 import ru.skypro.homework.dto.CommentDto;
 
+import java.util.List;
+
+
 public interface CommentService {
 
-    public CommentDto getComments(Integer id);
+    CommentDto addComments(CommentDto commentdto, Long adsPk);
+
+    List<CommentDto> getAllCommentsByAdsPk(Long adsPk);
+
+    CommentDto getComments(Long adsPk, Integer pk);
+
+    CommentDto updateComments(CommentDto commentDto, Long adsPk, Integer pk);
+
+    void deleteComments(Long adsPk, Integer pk);
+
+
 }
