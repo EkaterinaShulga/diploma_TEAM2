@@ -8,8 +8,10 @@ import javax.persistence.Entity;
 public class UserDto {
     String firstName;
     String lastName;
-    String password;
     String phone;
     String email;
+    String regDate;
+    String city;
+    String image;
     String id;
 }
