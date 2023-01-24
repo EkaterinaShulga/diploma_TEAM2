@@ -3,89 +3,89 @@
 --changeset iaktov:2
 CREATE TABLE Users
 (
-    email     TEXT NOT NULL,
-    firstName TEXT NOT NULL,
     id        BIGSERIAL PRIMARY KEY,
-    lastName  TEXT NOT NULL,
-    phone     TEXT NOT NULL,
-    regDate   TEXT NOT NULL,
-    city      TEXT NOT NULL,
-    image     TEXT NOT NULL
+    email     TEXT,
+    firstName TEXT,
+    lastName  TEXT,
+    phone     TEXT,
+    regDate   TEXT,
+    city      TEXT,
+    image     TEXT
 
 );
 
 --changeset iaktov: 1
-CREATE TABLE NewPassword
+CREATE TABLE Password
 (
-    currentPassword TEXT NOT NULL,
-    newPassword     TEXT NOT NULL
+    currentPassword TEXT,
+    newPassword     TEXT
 );
 
 CREATE TABLE RegisterReq
 (
-    userName  TEXT NOT NULL,
-    password  TEXT NOT NULL,
-    firstName TEXT NOT NULL,
-    lastName  TEXT NOT NULL,
-    phone     TEXT NOT NULL,
+    userName  TEXT,
+    password  TEXT,
+    firstName TEXT,
+    lastName  TEXT,
+    phone     TEXT,
     role      TEXT
 );
 
 CREATE TABLE LoginReq
 (
-    password TEXT NOT NULL,
-    username TEXT NOT NULL
+    password TEXT,
+    username TEXT
 
 );
 
 CREATE TABLE CreateAds
 (
-    description TEXT   NOT NULL,
-    price       BIGINT NOT NULL,
-    title       TEXT   NOT NULL
+    description TEXT,
+    price       BIGINT,
+    title       TEXT
 
 );
 
 CREATE TABLE Ads
 (
-    author BIGINT NOT NULL,
-    image  TEXT   NOT NULL,
+    author BIGINT,
+    image  TEXT,
     pk     BIGSERIAL PRIMARY KEY,
-    price  BIGINT NOT NULL,
-    title  TEXT   NOT NULL
+    price  BIGINT,
+    title  TEXT
 );
 
 CREATE TABLE Comment
 (
-    author    BIGINT NOT NULL,
-    createdAt TEXT   NOT NULL,
+    author    BIGINT,
+    createdAt TEXT,
     pk        BIGSERIAL PRIMARY KEY,
-    text      TEXT   NOT NULL
+    text      TEXT
 );
 
 
 CREATE TABLE ResponseWrapperAds
 (
-    count   BIGINT NOT NULL,
+    count   BIGINT,
     results BIGSERIAL REFERENCES Comment (pk)
 );
 CREATE TABLE FullAds
 (
-    authorFirstName TEXT   NOT NULL,
-    authorLastName  TEXT   NOT NULL,
-    description     TEXT   NOT NULL,
-    email           TEXT   NOT NULL,
-    image           TEXT   NOT NULL,
-    phone           TEXT   NOT NULL,
+    authorFirstName TEXT,
+    authorLastName  TEXT,
+    description     TEXT,
+    email           TEXT,
+    image           TEXT,
+    phone           TEXT,
     pk              BIGSERIAL PRIMARY KEY,
-    price           BIGINT NOT NULL,
-    title           TEXT   NOT NULL
+    price           BIGINT,
+    title           TEXT
 
 );
 
 CREATE TABLE ResponseWrapperComment
 (
-    count   BIGINT NOT NULL,
+    count   BIGINT,
     results BIGSERIAL REFERENCES Comment (pk)
 );
 
