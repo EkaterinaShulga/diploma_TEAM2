@@ -18,8 +18,8 @@ public class UserServiceImpl implements UserService {
     private final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
     private final UserRepository userRepository;
+    
     private final UserMapper userMapper;
-
 
     public UserServiceImpl(UserRepository userRepository, UserMapper userMapper) {
         this.userRepository = userRepository;
@@ -51,5 +51,10 @@ public class UserServiceImpl implements UserService {
             return userMapper.toDto(user);
         }
         return null;
+    }
+
+    public UserEntity getUserByLogin(String userLogin) {
+        return userRepository.findByEmail(userLogin)
+                .orElseThrow(UserNotFoundException::new);
     }
 }

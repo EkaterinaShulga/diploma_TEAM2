@@ -12,12 +12,14 @@ import ru.skypro.homework.dto.ads.CreateAdsDto;
 import ru.skypro.homework.dto.ads.FullAdsDto;
 import ru.skypro.homework.dto.ads.ResponseWrapperAdsDto;
 import ru.skypro.homework.entity.AdsEntity;
+import ru.skypro.homework.entity.UserEntity;
 import ru.skypro.homework.exceptions.AdsNotFoundException;
 import ru.skypro.homework.mapping.ads.AdsDtoMapper;
 import ru.skypro.homework.mapping.ads.CreateAdsDtoMapper;
 import ru.skypro.homework.mapping.ads.FullAdsDtoMapper;
 import ru.skypro.homework.repository.AdsRepository;
 import ru.skypro.homework.service.AdsService;
+import ru.skypro.homework.service.impl.UserServiceImpl;
 
 import javax.persistence.EntityNotFoundException;
 import java.io.IOException;
@@ -31,7 +33,7 @@ public class AdsServiceImpl implements AdsService {
 
     private final FileService fileService;
     private final AdsRepository adsRepository;
-    private final UsersService usersService;
+    private final UserServiceImpl usersService;
     private final AdsDtoMapper adsDtoMapper;
     private final CreateAdsDtoMapper createAdsDtoMapper;
     private final FullAdsDtoMapper fullAdsDtoMapper;
