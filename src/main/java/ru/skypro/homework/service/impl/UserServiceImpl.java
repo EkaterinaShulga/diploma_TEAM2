@@ -5,6 +5,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.skypro.homework.dto.User.Password;
 import ru.skypro.homework.dto.User.UserDto;
+import ru.skypro.homework.entity.UserEntity;
+import ru.skypro.homework.repository.UserRepository;
 import ru.skypro.homework.service.UserService;
 
 import java.util.Collection;
@@ -14,11 +16,11 @@ public class UserServiceImpl implements UserService {
 
     private final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
- //   private final UserRepository userRepository;
+    private final UserRepository userRepository;
 
-  /*  public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
-    }*/
+    }
 
     public UserDto editUser(UserDto user) {
         logger.info("Was invoked method for edit user");
@@ -37,11 +39,16 @@ public class UserServiceImpl implements UserService {
 
     public UserDto changePassword(Password password) {
         logger.info("Was invoked method for change password of user");
-        if (password != null){
+        if (password != null) {
             UserDto user = null/*userRepository.getUserDtoByPassword(password.getCurrentPassword())*/;
             user.setPassword(password.getNewPassword());
             return user;
         }
         return null;
+    }
+
+    public UserEntity getUserByLogin(String userLogin) {
+        return userRepository.findByEmail(userLogin)
+                .orElseThrow(UserNotFoundException::new);
     }
 }
