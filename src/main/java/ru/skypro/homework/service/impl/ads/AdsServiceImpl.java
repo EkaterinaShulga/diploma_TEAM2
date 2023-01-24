@@ -7,12 +7,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import ru.skypro.homework.controller.AdsController;
-import ru.skypro.homework.dto.ads.AdsDto;
-import ru.skypro.homework.dto.ads.CreateAdsDto;
-import ru.skypro.homework.dto.ads.FullAdsDto;
-import ru.skypro.homework.dto.ads.ResponseWrapperAdsDto;
+import ru.skypro.homework.dto.Ads.*;
 import ru.skypro.homework.entity.AdsEntity;
-import ru.skypro.homework.entity.UserEntity;
+import ru.skypro.homework.entity.User.User;
 import ru.skypro.homework.exceptions.AdsNotFoundException;
 import ru.skypro.homework.mapping.ads.AdsDtoMapper;
 import ru.skypro.homework.mapping.ads.CreateAdsDtoMapper;
@@ -40,7 +37,7 @@ public class AdsServiceImpl implements AdsService {
 
     @Override
     public AdsDto createAds(String userLogin, CreateAdsDto createAdsDto, String image) {
-        UserEntity user = usersService.getUserByLogin(userLogin);
+        User user = usersService.getUserByLogin(userLogin);
         int exist = adsRepository.countByTitleAndUserId(createAdsDto.getTitle(), user.getId());
         if (exist > 0) {
             return null;
@@ -94,7 +91,7 @@ public class AdsServiceImpl implements AdsService {
     }
     @Override
     public AdsDto updateAds(String userLogin, long adsId, CreateAdsDto updatedAdsDto) {
-        UserEntity user = usersService.getUserByLogin(userLogin);
+        User user = usersService.getUserByLogin(userLogin);
         Optional<AdsEntity> optionalAds = adsRepository.findByIdAndUserId(adsId, user.getId());
 
         optionalAds.ifPresent(entity -> {

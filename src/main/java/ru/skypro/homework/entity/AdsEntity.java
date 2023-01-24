@@ -1,5 +1,6 @@
 package ru.skypro.homework.entity;
 import lombok.Data;
+import ru.skypro.homework.entity.User.User;
 
 import javax.persistence.*;
 
@@ -12,7 +13,7 @@ public class AdsEntity {
     private Long id;
 
     @ManyToOne
-    private UserEntity user;
+    private User user;
     private String image;
     private int price;
     private String title;

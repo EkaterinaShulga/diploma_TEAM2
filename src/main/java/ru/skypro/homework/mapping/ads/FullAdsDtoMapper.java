@@ -3,8 +3,8 @@ import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
-import ru.skypro.homework.dto.ads.FullAdsDto;
-import ru.skypro.homework.dto.UserDto;
+import ru.skypro.homework.dto.Ads.FullAdsDto;
+import ru.skypro.homework.dto.User.UserDto;
 import ru.skypro.homework.entity.AdsEntity;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING, injectionStrategy = InjectionStrategy.CONSTRUCTOR)

@@ -1,4 +1,4 @@
-package ru.skypro.homework.dto.ads;
+package ru.skypro.homework.dto.Ads;
 
 public class FullAdsDto {
     private String authorFirstName;

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import ru.skypro.homework.dto.User.PasswordDto;
 import ru.skypro.homework.dto.User.UserDto;
 import ru.skypro.homework.entity.User.User;
+import ru.skypro.homework.exceptions.UserAlreadyCreatedException;
 import ru.skypro.homework.mappers.User.UserMapper;
 import ru.skypro.homework.repository.UserRepository;
 import ru.skypro.homework.service.UserService;
@@ -53,8 +54,8 @@ public class UserServiceImpl implements UserService {
         return null;
     }
 
-    public UserEntity getUserByLogin(String userLogin) {
+    public User getUserByLogin(String userLogin) {
         return userRepository.findByEmail(userLogin)
-                .orElseThrow(UserNotFoundException::new);
+                .orElseThrow(UserAlreadyCreatedException::new);
     }
 }
