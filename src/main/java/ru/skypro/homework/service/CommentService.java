@@ -17,5 +17,4 @@ public interface CommentService {
 
     void deleteComments(Long adsPk, Integer pk);
 
-
 }

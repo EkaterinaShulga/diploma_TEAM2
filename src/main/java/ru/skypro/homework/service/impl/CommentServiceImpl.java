@@ -1,6 +1,5 @@
 package ru.skypro.homework.service.impl;
 
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -96,5 +95,4 @@ public class CommentServiceImpl implements CommentService {
         commentRepository.delete(comment);
         logger.info("delete AdsComment");
     }
-
 }

@@ -14,7 +14,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import ru.skypro.homework.dto.Ads.*;
+import ru.skypro.homework.entity.Comment;
 import ru.skypro.homework.exceptions.ImageProcessException;
+import ru.skypro.homework.repositories.CommentRepository;
 import ru.skypro.homework.service.impl.ads.AdsServiceImpl;
 import ru.skypro.homework.service.impl.CommentServiceImpl;
 import org.springframework.http.MediaType;
@@ -27,6 +29,7 @@ import org.springframework.http.HttpStatus;
 import ru.skypro.homework.service.impl.ads.FileService;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -47,6 +50,8 @@ public class AdsController {
     private final AdsServiceImpl adsService;
     private final CommentServiceImpl commentService;
     private final FileService fileService;
+    private final CommentRepository commentRepository;
+
 
     @GetMapping(value = "/{id}")
     @Operation(
@@ -132,11 +137,16 @@ public class AdsController {
         return ResponseEntity.ok(adsDto);
     }
 
-    @GetMapping("/{ad_pk}/comments")
-    public ResponseEntity<CommentDto> getComments(@PathVariable("ad_pk") Integer adPk) {
-        logger.info("Processing getComments Controller");
-        CommentDto commentDto = commentService.getComments(adPk);
-        return ResponseEntity.ok(commentDto);
+    @GetMapping("/{ad_pk}/comments") //возвращаем все комментраии по id объявления +
+    public ResponseEntity<List<CommentDto>> getAllCommentsByAdsPk(@PathVariable("ad_pk") Long adPk) {
+        List<CommentDto> allCommentsDto = commentService.getAllCommentsByAdsPk(adPk);
+        if (!allCommentsDto.isEmpty()) {
+            logger.info("get all ads by this adPk and pk");
+            return ResponseEntity.ok(allCommentsDto);
+
+        }
+        return ResponseEntity.notFound().build();
+
     }
 
     @GetMapping("/me")
@@ -160,17 +170,19 @@ public class AdsController {
         return new CommentDto();
     }
 
-    @DeleteMapping("/{ad_pk}/comment/{id}")
-    public ResponseEntity<CommentDto> deleteComments(@PathVariable("ad_pk") String adPk,
-                                                     @PathVariable("id") Integer id) {
-
-        CommentDto comment = new CommentDto(); //находим комментарий в БД
+    @DeleteMapping("/{ad_pk}/comment/{id}")//удаляем комментраии по id объявления и  id комментария+
+    public ResponseEntity<Comment> deleteComments(@PathVariable("ad_pk") Long adPk,
+                                                  @PathVariable("id") Integer id) {
+        CommentDto comment = commentService.getComments(adPk, id);
         if (comment == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            logger.info("Not found ads by this adPk/id");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+
         } else {
-            logger.info("delete AdsComment - deleteAdsComment");
+            commentService.deleteComments(adPk, id);
             return ResponseEntity.ok().build();
         }
+
     }
 
     @GetMapping("/{ad_pk}/comments/{id}")
@@ -181,13 +193,17 @@ public class AdsController {
         return commentDto;
     }
 
-    @PatchMapping("/{ad_pk}/comment/{id}")
-    public CommentDto updateComments(@PathVariable("ad_pk") String adPk,
-                                       @PathVariable("id") Integer pkAdsComment,
-                                       @RequestBody CommentDto comment) {
-        CommentDto commentDto = new CommentDto();
-        logger.info("return new AdsComment - updateComments");
-        return comment;
+    @PatchMapping("/{ad_pk}/comment/{id}")//изменяем комментраии по id объявления+
+    public ResponseEntity<CommentDto> updateComments(@PathVariable("ad_pk") Long adPk,
+                                                     @PathVariable("id") Integer id,
+                                                     @RequestBody CommentDto commentUpdate) {
+        Comment comment = commentRepository.findCommentsByAdsPkAndPk(adPk, id);
+        if (comment == null) {
+            logger.warn("Not found comments by this adPk/pk");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        commentService.updateComments(commentUpdate, adPk, id);
+        return ResponseEntity.ok(commentUpdate);
     }
 
     @PatchMapping(value = "/{id}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
