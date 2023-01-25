@@ -95,5 +95,4 @@ public class CommentServiceImpl implements CommentService {
         commentRepository.delete(comment);
         logger.info("delete AdsComment");
     }
-
 }

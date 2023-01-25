@@ -7,7 +7,6 @@ import ru.skypro.homework.dto.CommentDto;
 import ru.skypro.homework.entity.Comment;
 
 @Mapper(componentModel = "spring")
-
 public interface CommentMapper {
     CommentMapper INSTANCE = Mappers.getMapper(CommentMapper.class);
 

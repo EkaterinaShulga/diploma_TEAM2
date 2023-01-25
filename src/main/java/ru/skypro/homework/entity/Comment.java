@@ -15,7 +15,6 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer pk;
     private String text;
-
     private Long adsPk;
 
 }

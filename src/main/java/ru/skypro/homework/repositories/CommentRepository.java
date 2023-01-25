@@ -9,8 +9,10 @@ import java.util.List;
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Integer> {
 
-    List<Comment> findCommentsByAdsPk(Long adsPk);
-    Comment findCommentsByAdsPkAndPk(Long adsPk, Integer pk);
+
+        List<Comment> findCommentsByAdsPk(Long adsPk);
+        Comment findCommentsByAdsPkAndPk(Long adsPk, Integer pk);
+
+    }
 
 
-}
