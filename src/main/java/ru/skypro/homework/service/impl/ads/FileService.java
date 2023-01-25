@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Objects;
 
 import static java.nio.file.StandardOpenOption.CREATE_NEW;
@@ -68,7 +69,7 @@ public class FileService {
                 System.currentTimeMillis() / 100 +
                 getExtension(Objects.requireNonNull(uploadedFile.getContentType()));
 
-        return Path.of(
+        return Paths.get(
                 uploadedDir,
                 result
         );
@@ -95,7 +96,7 @@ public class FileService {
         if (null == filePath) {
             return false;
         }
-        Path pathFile = Path.of(filePath);
+        Path pathFile = Paths.get(filePath);
         return Files.deleteIfExists(pathFile);
     }
 }
