@@ -13,7 +13,7 @@ public interface CommentMapper {
     CommentMapper INSTANCE = Mappers.getMapper(CommentMapper.class);
 
     CommentDto toDto(Comment comment);
-    @Mapping(target = "pk", ignore = true)
+    @Mapping(target = "adsPk", ignore = true)
     Comment toComment(CommentDto commentDto);
 
 }
