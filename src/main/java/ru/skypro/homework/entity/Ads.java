@@ -1,10 +1,9 @@
 package ru.skypro.homework.entity;
 
 import lombok.Data;
-import ru.skypro.homework.entity.User.User;
+import ru.skypro.homework.entity.user.User;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Data
 @Entity

@@ -1,6 +1,6 @@
 package ru.skypro.homework.service;
 
-import ru.skypro.homework.dto.Ads.CommentDto;
+import ru.skypro.homework.dto.ads.CommentDto;
 
 import java.util.List;
 

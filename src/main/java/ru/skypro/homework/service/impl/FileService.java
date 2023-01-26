@@ -1,4 +1,4 @@
-package ru.skypro.homework.service.impl.ads;
+package ru.skypro.homework.service.impl;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
@@ -7,13 +7,11 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.exceptions.FileSizeLimitException;
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Objects;
 
-import static java.nio.file.StandardOpenOption.CREATE_NEW;
 
 @Service
 public class FileService {
@@ -38,9 +36,11 @@ public class FileService {
         Files.createDirectories(filePath.getParent());
         Files.deleteIfExists(filePath);
 
-        try (OutputStream toIS = Files.newOutputStream(filePath, CREATE_NEW)) {
-            uploadedFile.getInputStream();
+        try {
+            Files.write(filePath, uploadedFile.getBytes());
             return "/" + filePath;
+        } catch (IOException e) {
+            return e.getMessage();
         }
     }
 

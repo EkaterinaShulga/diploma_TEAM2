@@ -1,8 +1,6 @@
-package ru.skypro.homework.dto.User;
+package ru.skypro.homework.dto.user;
 
 import lombok.Data;
-
-import javax.persistence.Entity;
 
 @Data
 public class UserDto {

@@ -1,6 +1,6 @@
-package ru.skypro.homework.entity.User;
+package ru.skypro.homework.entity.user;
 
-import ru.skypro.homework.dto.Auth.Role;
+import ru.skypro.homework.dto.auth.Role;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

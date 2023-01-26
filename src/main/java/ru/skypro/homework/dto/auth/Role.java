@@ -1,4 +1,4 @@
-package ru.skypro.homework.dto.Auth;
+package ru.skypro.homework.dto.auth;
 
 public enum Role {
     USER, ADMIN
