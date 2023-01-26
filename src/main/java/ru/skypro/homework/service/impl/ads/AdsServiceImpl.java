@@ -8,13 +8,13 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import ru.skypro.homework.controller.AdsController;
 import ru.skypro.homework.dto.Ads.*;
-import ru.skypro.homework.entity.AdsEntity;
+import ru.skypro.homework.entity.Ads;
 import ru.skypro.homework.entity.User.User;
 import ru.skypro.homework.exceptions.AdsNotFoundException;
 import ru.skypro.homework.mapping.ads.AdsDtoMapper;
 import ru.skypro.homework.mapping.ads.CreateAdsDtoMapper;
 import ru.skypro.homework.mapping.ads.FullAdsDtoMapper;
-import ru.skypro.homework.repository.AdsRepository;
+import ru.skypro.homework.repositories.AdsRepository;
 import ru.skypro.homework.service.AdsService;
 import ru.skypro.homework.service.impl.UserServiceImpl;
 
@@ -26,7 +26,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Service
 public class AdsServiceImpl implements AdsService {
-    private Logger logger = LoggerFactory.getLogger(AdsController.class);
+    private final Logger logger = LoggerFactory.getLogger(AdsController.class);
 
     private final FileService fileService;
     private final AdsRepository adsRepository;
@@ -43,12 +43,12 @@ public class AdsServiceImpl implements AdsService {
             return null;
         }
 
-        AdsEntity adsEntity = createAdsDtoMapper.toModel(createAdsDto, user, image);
+        Ads adsEntity = createAdsDtoMapper.toModel(createAdsDto, user, image);
         return adsDtoMapper.toDto(adsRepository.save(adsEntity));
     }
 
     @Override
-    public AdsEntity getAdsById(long id) {
+    public Ads getAdsByPk(long id) {
 
         return adsRepository.findById(id)
                 .orElseThrow(() -> new AdsNotFoundException("Объявление с id " + id + " не найдено!"));
@@ -56,7 +56,7 @@ public class AdsServiceImpl implements AdsService {
 
     @Override
     public ResponseWrapperAdsDto getMyAds(String userLogin) {
-        List<AdsEntity> myAds = adsRepository.findByUserEmail(userLogin);
+        List<Ads> myAds = adsRepository.findByUserEmail(userLogin);
         ResponseWrapperAdsDto wrapperAds = new ResponseWrapperAdsDto();
 
         if (!myAds.isEmpty()) {
@@ -75,7 +75,7 @@ public class AdsServiceImpl implements AdsService {
     @Override
     public ResponseWrapperAdsDto getAllAds() {
         ResponseWrapperAdsDto wrapperAds = new ResponseWrapperAdsDto();
-        List<AdsEntity> adsList = adsRepository.findAll();
+        List<Ads> adsList = adsRepository.findAll();
 
         if (!adsList.isEmpty()) {
             wrapperAds.setResults(
@@ -92,7 +92,7 @@ public class AdsServiceImpl implements AdsService {
     @Override
     public AdsDto updateAds(String userLogin, long adsId, CreateAdsDto updatedAdsDto) {
         User user = usersService.getUserByLogin(userLogin);
-        Optional<AdsEntity> optionalAds = adsRepository.findByIdAndUserId(adsId, user.getId());
+        Optional<Ads> optionalAds = adsRepository.findByPkAndUserId(adsId, user.getId());
 
         optionalAds.ifPresent(entity -> {
             entity.setDescription(updatedAdsDto.getDescription());
@@ -108,7 +108,7 @@ public class AdsServiceImpl implements AdsService {
 
     @Override
     public boolean removeAds(long adsId, String userLogin) {
-        Optional<AdsEntity> optionalAds = adsRepository.findByIdAndUserEmail(adsId, userLogin);
+        Optional<Ads> optionalAds = adsRepository.findByPkAndUserEmail(adsId, userLogin);
 
         optionalAds.ifPresent((adsEntity -> {
             // Удаляем комментарий при удалении объявления
@@ -123,7 +123,7 @@ public class AdsServiceImpl implements AdsService {
     public FullAdsDto getAds(
             long adsId
     ) {
-        Optional<AdsEntity> optionalAds = adsRepository.findById(
+        Optional<Ads> optionalAds = adsRepository.findById(
                 adsId
         );
 
@@ -133,9 +133,9 @@ public class AdsServiceImpl implements AdsService {
     }
 
     public boolean updateAdsImagePath(Long adsId, String userLogin, String filePath) {
-        Optional<AdsEntity> optionalAds = adsRepository.findByIdAndUserEmail(adsId, userLogin);
+        Optional<Ads> optionalAds = adsRepository.findByPkAndUserEmail(adsId, userLogin);
 
-        AdsEntity adsEntity = optionalAds.orElseThrow(EntityNotFoundException::new);
+        Ads adsEntity = optionalAds.orElseThrow(EntityNotFoundException::new);
         String oldImage = adsEntity.getImage();
 
         try {

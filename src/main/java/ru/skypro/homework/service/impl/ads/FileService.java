@@ -23,56 +23,33 @@ public class FileService {
     @Value("${uploaded.max_file_size}")
     private static int SIZE_LIMIT;
 
-    public String saveLimitedUploadedFile(
-            String filePrefix,
-            MultipartFile uploadedFile
-    ) throws IOException {
+    public String saveLimitedUploadedFile(String filePrefix, MultipartFile uploadedFile) throws IOException {
         if (!isCorrectFileSize(uploadedFile.getSize())) {
             throw new FileSizeLimitException();
         }
 
-        return saveUploadedFile(
-                filePrefix,
-                uploadedFile
-        );
+        return saveUploadedFile(filePrefix, uploadedFile);
     }
 
-    public String saveUploadedFile(
-            String filePrefix,
-            MultipartFile uploadedFile
-    ) throws IOException {
+    public String saveUploadedFile(String filePrefix, MultipartFile uploadedFile) throws IOException {
 
-        Path filePath = getFilePath(
-                filePrefix,
-                uploadedFile
-        );
+        Path filePath = getFilePath(filePrefix, uploadedFile);
 
         Files.createDirectories(filePath.getParent());
         Files.deleteIfExists(filePath);
 
-        try (
-                OutputStream toIS = Files.newOutputStream(
-                        filePath,
-                        CREATE_NEW
-                )
-        ) {
-            uploadedFile.getInputStream().transferTo(toIS);
+        try (OutputStream toIS = Files.newOutputStream(filePath, CREATE_NEW)) {
+            uploadedFile.getInputStream();
             return "/" + filePath;
         }
     }
 
-    private Path getFilePath(
-            String filePrefix,
-            MultipartFile uploadedFile
-    ) {
+    private Path getFilePath(String filePrefix, MultipartFile uploadedFile) {
         String result = filePrefix + "/" +
                 System.currentTimeMillis() / 100 +
                 getExtension(Objects.requireNonNull(uploadedFile.getContentType()));
 
-        return Paths.get(
-                uploadedDir,
-                result
-        );
+        return Paths.get(uploadedDir, result);
     }
 
     private String getExtension(String contentType) {

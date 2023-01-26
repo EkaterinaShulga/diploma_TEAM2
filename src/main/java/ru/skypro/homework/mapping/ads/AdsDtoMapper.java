@@ -5,22 +5,22 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
 import ru.skypro.homework.dto.Ads.AdsDto;
-import ru.skypro.homework.entity.AdsEntity;
+import ru.skypro.homework.entity.Ads;
 
 import java.util.List;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING, injectionStrategy = InjectionStrategy.CONSTRUCTOR)
 public interface AdsDtoMapper {
-    @Mapping(source = "pk", target = "id")
+    @Mapping(source = "pk", target = "pk")
     @Mapping(target = "description", ignore = true)
     @Mapping(target = "user", ignore = true)
-    AdsEntity toModel(AdsDto dto);
+    Ads toModel(AdsDto dto);
 
-    @Mapping(source = "id", target = "pk")
+    @Mapping(source = "pk", target = "pk")
     @Mapping(source = "user.id", target = "author")
-    AdsDto toDto(AdsEntity entity);
+    AdsDto toDto(Ads entity);
 
-    List<AdsDto> toAdsDtoList(List<AdsEntity> entityList);
+    List<AdsDto> toAdsDtoList(List<Ads> entityList);
 
-    List<AdsEntity> toAdsEntityList(List<AdsDto> dtoList);
+    List<Ads> toAdsEntityList(List<AdsDto> dtoList);
 }
