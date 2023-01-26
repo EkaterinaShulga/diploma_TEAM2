@@ -5,6 +5,7 @@ import lombok.Data;
 @Data
 public class CreateAdsDto {
     private String description;
-    private int price;
+    private long price;
     private String title;
+    private String image;
 }

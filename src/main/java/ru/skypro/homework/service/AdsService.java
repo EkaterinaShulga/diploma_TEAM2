@@ -1,16 +1,15 @@
 package ru.skypro.homework.service;
 
 import ru.skypro.homework.dto.Ads.*;
-import ru.skypro.homework.entity.AdsEntity;
-
-import java.util.Collection;
+import ru.skypro.homework.entity.Ads;
 
 public interface AdsService {
 
 
     AdsDto createAds(String userLogin, CreateAdsDto createAdsDto, String image);
 
-    AdsEntity getAdsById(long id);
+
+    Ads getAdsByPk(long id);
 
     ResponseWrapperAdsDto getMyAds(String userLogin);
 

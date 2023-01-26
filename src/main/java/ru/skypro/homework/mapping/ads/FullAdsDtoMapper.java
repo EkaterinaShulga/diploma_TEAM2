@@ -5,7 +5,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
 import ru.skypro.homework.dto.Ads.FullAdsDto;
 import ru.skypro.homework.dto.User.UserDto;
-import ru.skypro.homework.entity.AdsEntity;
+import ru.skypro.homework.entity.Ads;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING, injectionStrategy = InjectionStrategy.CONSTRUCTOR)
 public interface FullAdsDtoMapper {
@@ -14,15 +14,15 @@ public interface FullAdsDtoMapper {
     @Mapping(target = "lastName", source = "authorLastName")
     UserDto dtoToUserDto(FullAdsDto dto);
 
-    @Mapping(source = "pk", target = "id")
+    @Mapping(source = "pk", target = "pk")
     @Mapping(target = "user.password", ignore = true)
-    AdsEntity
+    Ads
     toModel(FullAdsDto dto);
 
-    @Mapping(source = "id", target = "pk")
+    @Mapping(source = "pk", target = "pk")
     @Mapping(source = "user.firstName", target = "authorFirstName")
     @Mapping(source = "user.lastName", target = "authorLastName")
     @Mapping(source = "user.email", target = "email")
     @Mapping(source = "user.phone", target = "phone")
-    FullAdsDto toDto(AdsEntity entity);
+    FullAdsDto toDto(Ads entity);
 }

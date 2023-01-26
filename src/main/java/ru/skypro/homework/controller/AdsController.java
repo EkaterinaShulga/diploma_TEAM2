@@ -107,7 +107,7 @@ public class AdsController {
         if (newAdsDto == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
-        //Service обновления объявления в БД, возвращаем обновленный объект
+
         return newAdsDto;
     }
 
