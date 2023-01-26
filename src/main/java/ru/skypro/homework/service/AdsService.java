@@ -1,6 +1,6 @@
 package ru.skypro.homework.service;
 
-import ru.skypro.homework.dto.Ads.*;
+import ru.skypro.homework.dto.ads.*;
 import ru.skypro.homework.entity.Ads;
 
 public interface AdsService {

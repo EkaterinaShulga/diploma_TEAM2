@@ -1,4 +1,4 @@
-package ru.skypro.homework.entity.User;
+package ru.skypro.homework.entity.user;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

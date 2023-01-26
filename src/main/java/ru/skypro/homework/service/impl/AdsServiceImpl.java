@@ -1,22 +1,20 @@
-package ru.skypro.homework.service.impl.ads;
+package ru.skypro.homework.service.impl;
 
 
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import ru.skypro.homework.controller.AdsController;
-import ru.skypro.homework.dto.Ads.*;
+import ru.skypro.homework.dto.ads.*;
 import ru.skypro.homework.entity.Ads;
-import ru.skypro.homework.entity.User.User;
+import ru.skypro.homework.entity.user.User;
 import ru.skypro.homework.exceptions.AdsNotFoundException;
-import ru.skypro.homework.mapping.ads.AdsDtoMapper;
-import ru.skypro.homework.mapping.ads.CreateAdsDtoMapper;
-import ru.skypro.homework.mapping.ads.FullAdsDtoMapper;
+import ru.skypro.homework.mappers.ads.AdsDtoMapper;
+import ru.skypro.homework.mappers.ads.CreateAdsDtoMapper;
+import ru.skypro.homework.mappers.ads.FullAdsDtoMapper;
 import ru.skypro.homework.repositories.AdsRepository;
 import ru.skypro.homework.service.AdsService;
-import ru.skypro.homework.service.impl.UserServiceImpl;
 
 import javax.persistence.EntityNotFoundException;
 import java.io.IOException;
@@ -31,12 +29,14 @@ public class AdsServiceImpl implements AdsService {
     private final FileService fileService;
     private final AdsRepository adsRepository;
     private final UserServiceImpl usersService;
+    private final CommentServiceImpl commentService;
     private final AdsDtoMapper adsDtoMapper;
     private final CreateAdsDtoMapper createAdsDtoMapper;
     private final FullAdsDtoMapper fullAdsDtoMapper;
 
     @Override
     public AdsDto createAds(String userLogin, CreateAdsDto createAdsDto, String image) {
+        logger.info("Processing AdsServiceImpl:createAds()");
         User user = usersService.getUserByLogin(userLogin);
         int exist = adsRepository.countByTitleAndUserId(createAdsDto.getTitle(), user.getId());
         if (exist > 0) {
@@ -49,13 +49,14 @@ public class AdsServiceImpl implements AdsService {
 
     @Override
     public Ads getAdsByPk(long id) {
-
+        logger.info("Processing AdsServiceImpl:getAdsByPk()");
         return adsRepository.findById(id)
                 .orElseThrow(() -> new AdsNotFoundException("Объявление с id " + id + " не найдено!"));
     }
 
     @Override
     public ResponseWrapperAdsDto getMyAds(String userLogin) {
+        logger.info("Processing AdsServiceImpl:getMyAds()");
         List<Ads> myAds = adsRepository.findByUserEmail(userLogin);
         ResponseWrapperAdsDto wrapperAds = new ResponseWrapperAdsDto();
 
@@ -74,6 +75,7 @@ public class AdsServiceImpl implements AdsService {
 
     @Override
     public ResponseWrapperAdsDto getAllAds() {
+        logger.info("Processing AdsServiceImpl:getAllAds()");
         ResponseWrapperAdsDto wrapperAds = new ResponseWrapperAdsDto();
         List<Ads> adsList = adsRepository.findAll();
 
@@ -89,17 +91,20 @@ public class AdsServiceImpl implements AdsService {
 
         return wrapperAds;
     }
+
     @Override
     public AdsDto updateAds(String userLogin, long adsId, CreateAdsDto updatedAdsDto) {
+        logger.info("Processing AdsServiceImpl:updateAds()");
         User user = usersService.getUserByLogin(userLogin);
         Optional<Ads> optionalAds = adsRepository.findByPkAndUserId(adsId, user.getId());
 
-        optionalAds.ifPresent(entity -> {
-            entity.setDescription(updatedAdsDto.getDescription());
-            entity.setTitle(updatedAdsDto.getTitle());
-            entity.setPrice(updatedAdsDto.getPrice());
+        optionalAds.ifPresent(adsEntity -> {
+            adsEntity.setDescription(updatedAdsDto.getDescription());
+            adsEntity.setTitle(updatedAdsDto.getTitle());
+            adsEntity.setPrice(updatedAdsDto.getPrice());
 
-            adsRepository.save(entity);});
+            adsRepository.save(adsEntity);
+        });
 
         return optionalAds
                 .map(adsDtoMapper::toDto)
@@ -108,11 +113,11 @@ public class AdsServiceImpl implements AdsService {
 
     @Override
     public boolean removeAds(long adsId, String userLogin) {
+        logger.info("Processing AdsServiceImpl:removeAds()");
         Optional<Ads> optionalAds = adsRepository.findByPkAndUserEmail(adsId, userLogin);
 
         optionalAds.ifPresent((adsEntity -> {
-            // Удаляем комментарий при удалении объявления
-            // adsCommentService.deleteAdsCommentByDeletedAds(adsEntity.getId());
+//            commentService.deleteComments(adsId, (int) adsEntity.getPk());
             adsRepository.delete(adsEntity);
         }));
 
@@ -120,12 +125,9 @@ public class AdsServiceImpl implements AdsService {
     }
 
     @Override
-    public FullAdsDto getAds(
-            long adsId
-    ) {
-        Optional<Ads> optionalAds = adsRepository.findById(
-                adsId
-        );
+    public FullAdsDto getAds(long adsId) {
+        logger.info("Processing AdsServiceImpl:getAds()");
+        Optional<Ads> optionalAds = adsRepository.findById(adsId);
 
         return optionalAds
                 .map(fullAdsDtoMapper::toDto)
@@ -133,6 +135,7 @@ public class AdsServiceImpl implements AdsService {
     }
 
     public boolean updateAdsImagePath(Long adsId, String userLogin, String filePath) {
+        logger.info("Processing AdsServiceImpl:updateAdsImagePath()");
         Optional<Ads> optionalAds = adsRepository.findByPkAndUserEmail(adsId, userLogin);
 
         Ads adsEntity = optionalAds.orElseThrow(EntityNotFoundException::new);
@@ -142,15 +145,16 @@ public class AdsServiceImpl implements AdsService {
             if (!oldImage.isEmpty()) {
                 fileService.removeFileByPath(oldImage);
             }
-        } catch (IOException ignored) {}
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+        }
         adsEntity.setImage(filePath);
 
         try {
             adsRepository.save(adsEntity);
-        } catch (DataAccessException e) {
-            return false;
+        } catch (AdsNotFoundException e) {
+            logger.error("Error: " + e.getMessage());
         }
-
         return true;
     }
 }

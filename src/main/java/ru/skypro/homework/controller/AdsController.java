@@ -13,20 +13,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-import ru.skypro.homework.dto.Ads.*;
+import ru.skypro.homework.dto.ads.*;
 import ru.skypro.homework.entity.Comment;
 import ru.skypro.homework.exceptions.ImageProcessException;
 import ru.skypro.homework.repositories.CommentRepository;
-import ru.skypro.homework.service.impl.ads.AdsServiceImpl;
+import ru.skypro.homework.service.impl.AdsServiceImpl;
 import ru.skypro.homework.service.impl.CommentServiceImpl;
 import org.springframework.http.MediaType;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Collection;
 
 import org.springframework.http.HttpStatus;
-import ru.skypro.homework.service.impl.ads.FileService;
+import ru.skypro.homework.service.impl.FileService;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;

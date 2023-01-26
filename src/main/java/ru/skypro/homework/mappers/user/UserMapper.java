@@ -1,13 +1,11 @@
-package ru.skypro.homework.mappers.User;
+package ru.skypro.homework.mappers.user;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import ru.skypro.homework.dto.Auth.Role;
-import ru.skypro.homework.dto.User.UserDto;
-import ru.skypro.homework.entity.User.User;
+import ru.skypro.homework.dto.user.UserDto;
+import ru.skypro.homework.entity.user.User;
 
 import java.util.Collection;
-import java.util.Optional;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {

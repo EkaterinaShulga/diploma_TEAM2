@@ -1,8 +1,8 @@
-package ru.skypro.homework.mappers.User;
+package ru.skypro.homework.mappers.user;
 
 import org.mapstruct.Mapper;
-import ru.skypro.homework.dto.User.PasswordDto;
-import ru.skypro.homework.entity.User.Password;
+import ru.skypro.homework.dto.user.PasswordDto;
+import ru.skypro.homework.entity.user.Password;
 
 @Mapper(componentModel = "spring")
 public interface PasswordMapper {
