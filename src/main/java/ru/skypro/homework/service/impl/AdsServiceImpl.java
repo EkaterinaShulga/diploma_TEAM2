@@ -18,6 +18,7 @@ import ru.skypro.homework.service.AdsService;
 
 import javax.persistence.EntityNotFoundException;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -63,11 +64,10 @@ public class AdsServiceImpl implements AdsService {
         if (!myAds.isEmpty()) {
             wrapperAds.setCount(myAds.size());
             wrapperAds.setResults(
-                    adsDtoMapper.toAdsDtoList(myAds)
-                            .toArray(new AdsDto[0]));
+                    adsDtoMapper.toAdsDtoList(myAds));
         } else {
             wrapperAds.setCount(0);
-            wrapperAds.setResults(new AdsDto[0]);
+            wrapperAds.setResults(Collections.emptyList());
         }
 
         return wrapperAds;
@@ -81,12 +81,11 @@ public class AdsServiceImpl implements AdsService {
 
         if (!adsList.isEmpty()) {
             wrapperAds.setResults(
-                    adsDtoMapper.toAdsDtoList(adsList)
-                            .toArray(new AdsDto[0]));
+                    adsDtoMapper.toAdsDtoList(adsList));
             wrapperAds.setCount(adsList.size());
         } else {
             wrapperAds.setCount(0);
-            wrapperAds.setResults(new AdsDto[0]);
+            wrapperAds.setResults(Collections.emptyList());
         }
 
         return wrapperAds;

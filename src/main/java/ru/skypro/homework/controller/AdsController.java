@@ -28,6 +28,8 @@ import org.springframework.http.HttpStatus;
 import ru.skypro.homework.service.impl.FileService;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -100,7 +102,7 @@ public class AdsController {
     )
     public AdsDto updateAds(@PathVariable("id") long adsId,
                             @RequestBody CreateAdsDto updatedAdsDto,
-                            Authentication authentication) {
+                            Authentication authentication) { // удалить
         logger.info("Processing updateAds Controller");
         AdsDto newAdsDto = adsService.updateAds(authentication.getName(), adsId, updatedAdsDto);
         if (newAdsDto == null) {
@@ -111,7 +113,7 @@ public class AdsController {
     }
 
     @PostMapping(
-            consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE},
+            consumes = {MediaType.MULTIPART_FORM_DATA_VALUE},
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     @Operation(
@@ -135,6 +137,10 @@ public class AdsController {
 
         return ResponseEntity.ok(adsDto);
     }
+
+
+
+
 
     @GetMapping("/{ad_pk}/comments") //возвращаем все комментраии по id объявления +
     public ResponseEntity<List<CommentDto>> getAllCommentsByAdsPk(@PathVariable("ad_pk") Long adPk) {
@@ -236,4 +242,13 @@ public class AdsController {
         }
     }
 
-}
+
+    @GetMapping()
+    public ResponseEntity<ResponseWrapperAdsDto> getAll() {
+            return ResponseEntity.ok(adsService.getAllAds());
+
+        }
+
+
+    }
+
