@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import ru.skypro.homework.controller.AdsController;
 import ru.skypro.homework.dto.ads.*;
 import ru.skypro.homework.entity.Ads;
-import ru.skypro.homework.entity.user.User;
+import ru.skypro.homework.entity.User;
 import ru.skypro.homework.exceptions.AdsNotFoundException;
 import ru.skypro.homework.mappers.ads.AdsDtoMapper;
 import ru.skypro.homework.mappers.ads.CreateAdsDtoMapper;

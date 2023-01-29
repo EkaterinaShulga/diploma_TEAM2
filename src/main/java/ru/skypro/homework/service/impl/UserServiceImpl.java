@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.skypro.homework.dto.user.PasswordDto;
 import ru.skypro.homework.dto.user.UserDto;
-import ru.skypro.homework.entity.user.User;
+import ru.skypro.homework.entity.User;
 import ru.skypro.homework.exceptions.UserAlreadyCreatedException;
 import ru.skypro.homework.mappers.user.UserMapper;
 import ru.skypro.homework.repositories.UserRepository;

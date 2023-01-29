@@ -3,7 +3,7 @@ package ru.skypro.homework.mappers.user;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import ru.skypro.homework.dto.user.UserDto;
-import ru.skypro.homework.entity.user.User;
+import ru.skypro.homework.entity.User;
 
 import java.util.Collection;
 

@@ -1,4 +1,4 @@
-package ru.skypro.homework.entity.user;
+package ru.skypro.homework.entity;
 
 import ru.skypro.homework.dto.auth.Role;
 
