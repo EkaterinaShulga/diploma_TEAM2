@@ -6,8 +6,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.http.ResponseEntity;
-import ru.skypro.homework.dto.user.PasswordDto;
-import ru.skypro.homework.dto.user.UserDto;
+import ru.skypro.homework.dto.PasswordDto;
+import ru.skypro.homework.dto.UserDto;
 import ru.skypro.homework.service.impl.UserServiceImpl;
 
 import java.util.Collection;

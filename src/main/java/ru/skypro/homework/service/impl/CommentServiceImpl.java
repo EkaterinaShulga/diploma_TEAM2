@@ -3,12 +3,12 @@ package ru.skypro.homework.service.impl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ru.skypro.homework.dto.ads.CommentDto;
+import ru.skypro.homework.dto.CommentDto;
 import ru.skypro.homework.entity.Ads;
 import ru.skypro.homework.entity.Comment;
-import ru.skypro.homework.mappers.CommentMapper;
-import ru.skypro.homework.repositories.AdsRepository;
-import ru.skypro.homework.repositories.CommentRepository;
+import ru.skypro.homework.mapper.CommentMapper;
+import ru.skypro.homework.repository.AdsRepository;
+import ru.skypro.homework.repository.CommentRepository;
 import ru.skypro.homework.service.CommentService;
 
 import java.util.ArrayList;

@@ -13,10 +13,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-import ru.skypro.homework.dto.ads.*;
+import ru.skypro.homework.dto.*;
 import ru.skypro.homework.entity.Comment;
-import ru.skypro.homework.exceptions.ImageProcessException;
-import ru.skypro.homework.repositories.CommentRepository;
+import ru.skypro.homework.exception.ImageProcessException;
+import ru.skypro.homework.repository.CommentRepository;
 import ru.skypro.homework.service.impl.AdsServiceImpl;
 import ru.skypro.homework.service.impl.CommentServiceImpl;
 import org.springframework.http.MediaType;
@@ -28,8 +28,6 @@ import org.springframework.http.HttpStatus;
 import ru.skypro.homework.service.impl.FileService;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,7 +42,7 @@ import java.util.Optional;
                 @ApiResponse(responseCode = "403", content = @Content())
         }
 )
-public class AdsController {
+public class    AdsController {
     private Logger logger = LoggerFactory.getLogger(AdsController.class);
     private static final String IMAGE_PATH = "/ads";
 

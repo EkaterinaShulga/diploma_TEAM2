@@ -1,10 +1,10 @@
-package ru.skypro.homework.mappers.ads;
+package ru.skypro.homework.mapper;
 
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
-import ru.skypro.homework.dto.ads.CreateAdsDto;
+import ru.skypro.homework.dto.CreateAdsDto;
 import ru.skypro.homework.entity.Ads;
 import ru.skypro.homework.entity.User;
 

@@ -1,9 +1,9 @@
-package ru.skypro.homework.mappers;
+package ru.skypro.homework.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
-import ru.skypro.homework.dto.ads.CommentDto;
+import ru.skypro.homework.dto.CommentDto;
 import ru.skypro.homework.entity.Comment;
 
 @Mapper(componentModel = "spring")

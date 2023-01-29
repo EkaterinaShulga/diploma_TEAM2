@@ -1,8 +1,8 @@
-package ru.skypro.homework.mappers.user;
+package ru.skypro.homework.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import ru.skypro.homework.dto.user.UserDto;
+import ru.skypro.homework.dto.UserDto;
 import ru.skypro.homework.entity.User;
 
 import java.util.Collection;
