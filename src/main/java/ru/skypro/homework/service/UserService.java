@@ -6,7 +6,7 @@ import ru.skypro.homework.dto.user.UserDto;
 import java.util.Collection;
 
 public interface UserService {
-    public UserDto editUser(UserDto user);
+    public UserDto editUser(UserDto user, String userLogin);
     public UserDto findUser(Long id);
     public Collection<UserDto> getAll();
     public UserDto changePassword(PasswordDto password);

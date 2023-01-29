@@ -12,6 +12,7 @@ import ru.skypro.homework.repositories.UserRepository;
 import ru.skypro.homework.service.UserService;
 
 import java.util.Collection;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -32,9 +33,22 @@ public class UserServiceImpl implements UserService {
         return userMapper.toDto(userRepository.findById(id).get());
     }
 
-    public UserDto editUser(UserDto user) {
+    public UserDto editUser(UserDto userDto, String userLogin) {
         logger.info("Was invoked method for edit user");
-        return userMapper.toDto(userRepository.save(userMapper.toEntity(user)));
+        System.out.println("login = " + userLogin);
+        Optional<User> optionalUser = Optional.of(getUserByLogin(userLogin));
+
+        optionalUser.ifPresent(userEntity -> {
+            userEntity.setFirstName(userDto.getFirstName());
+            userEntity.setLastName(userDto.getLastName());
+            userEntity.setPhone(userDto.getPhone());
+
+            userRepository.save(userEntity);
+        });
+
+        return optionalUser
+                .map(userMapper::toDto)
+                .orElse(null);
     }
 
     public Collection<UserDto> getAll() {

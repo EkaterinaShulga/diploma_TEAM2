@@ -11,5 +11,5 @@ public class UserDto {
     String regDate;
     String city;
     String image;
-    String id;
+    Long id;
 }

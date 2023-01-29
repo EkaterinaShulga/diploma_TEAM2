@@ -2,6 +2,7 @@ package ru.skypro.homework.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.http.ResponseEntity;
@@ -23,8 +24,8 @@ public class UserController {
     }
 
     @PatchMapping("/me")
-    public ResponseEntity<UserDto> updateUser(@RequestBody UserDto user) {
-        UserDto updatedUser = userService.editUser(user);
+    public ResponseEntity<UserDto> updateUser(@RequestBody UserDto userDto, Authentication authentication) {
+        UserDto updatedUser = userService.editUser(userDto, authentication.getName());
         if (updatedUser == null) {
             return ResponseEntity.notFound().build();
         }
