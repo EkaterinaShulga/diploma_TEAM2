@@ -1,5 +1,15 @@
 -- liquibase formatted sql
 
+--changeset iaktov:3
+DROP TABLE NewPassword;
+DROP TABLE RegisterReq;
+DROP TABLE LoginReq;
+DROP TABLE CreateAds;
+DROP TABLE ResponseWrapperAds;
+DROP TABLE ResponseWrapperComment;
+DROP TABLE FullAds;
+
+
 --changeset iaktov:2
 CREATE TABLE Users
 (
