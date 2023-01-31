@@ -61,6 +61,7 @@ CREATE TABLE Ads
     pk     BIGSERIAL PRIMARY KEY,
     price  BIGINT NOT NULL,
     title  TEXT   NOT NULL
+
 );
 
 CREATE TABLE Comment
@@ -68,7 +69,8 @@ CREATE TABLE Comment
     author    BIGINT NOT NULL,
     createdAt TEXT   NOT NULL,
     pk        BIGSERIAL PRIMARY KEY,
-    text      TEXT   NOT NULL
+    text      TEXT   NOT NULL,
+        FOREIGN KEY (Ads_pk)  REFERENCES Comment (ad)
 );
 
 CREATE TABLE ResponseWrapperAds
@@ -95,3 +97,4 @@ CREATE TABLE ResponseWrapperComment
     count   BIGINT NOT NULL,
     results BIGSERIAL REFERENCES Comment (pk)
 );
+

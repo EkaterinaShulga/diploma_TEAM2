@@ -166,11 +166,14 @@ public class    AdsController {
         return ResponseEntity.ok(myAds);
     }
 
-    @PostMapping("/{ad_pk}/comment")
-    public CommentDto addComments(@RequestBody CommentDto commentDto,
-                                  @PathVariable("ad_pk") String adPk) {
-        logger.info("Create new AdsComment - addAdsComments");
-        return new CommentDto();
+    @PostMapping("/{ad_pk}/comments")//создаем комментраии по id объявления +
+    public ResponseEntity<CommentDto> addComments(@RequestBody CommentDto commentdto,
+                                                  @PathVariable("ad_pk") Long adPk) {
+        CommentDto comment2 = commentService.addComments(commentdto, adPk);
+        if (comment2 == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(comment2);
     }
 
     @DeleteMapping("/{ad_pk}/comment/{id}")//удаляем комментраии по id объявления и  id комментария+

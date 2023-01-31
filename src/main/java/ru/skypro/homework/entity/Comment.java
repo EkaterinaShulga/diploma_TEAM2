@@ -1,5 +1,6 @@
 package ru.skypro.homework.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -15,6 +16,12 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer pk;
     private String text;
-    private Long adsPk;
+
+    @ManyToOne
+    @JoinColumn(name = "ad") //, referencedColumnName = "pk")
+   // @JsonIgnore
+    private  Ads ads;
+
+
 
 }

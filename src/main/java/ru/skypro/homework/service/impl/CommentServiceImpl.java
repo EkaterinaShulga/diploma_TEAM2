@@ -23,11 +23,14 @@ public class CommentServiceImpl implements CommentService {
 
     private final CommentMapper commentMapper;
 
+
+
     public CommentServiceImpl(CommentRepository commentRepository,
                               AdsRepository adsRepository, CommentMapper commentMapper) {
         this.commentRepository = commentRepository;
         this.adsRepository = adsRepository;
         this.commentMapper = commentMapper;
+
 
     }
 
@@ -37,9 +40,9 @@ public class CommentServiceImpl implements CommentService {
         Ads ads = adsRepository.findAdsByPk(adsPk);
         if (ads != null) {
             comment = CommentMapper.INSTANCE.toComment(commentDto);
-
-            comment.setAdsPk(ads.getPk());
+         //   comment.setAdsPk(ads.getPk());
             commentRepository.save(comment);
+
             logger.info("create comment");
 
         } else {
@@ -81,7 +84,7 @@ public class CommentServiceImpl implements CommentService {
             comment.setCreatedAt(commentUpdate.getCreatedAt());
             comment.setPk(pk);
             comment.setText(commentUpdate.getText());
-            comment.setAdsPk(adsPk);
+           // comment.setAdsPk(adsPk);
             commentRepository.save(comment);
             logger.info("return new AdsComment - updateComments");
         }

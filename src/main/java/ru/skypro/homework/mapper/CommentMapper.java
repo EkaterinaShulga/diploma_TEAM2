@@ -11,7 +11,7 @@ public interface CommentMapper {
     CommentMapper INSTANCE = Mappers.getMapper(CommentMapper.class);
 
     CommentDto toDto(Comment comment);
-    @Mapping(target = "adsPk", ignore = true)
+   // @Mapping(target = "ad", ignore = true)
     Comment toComment(CommentDto commentDto);
 
 }
