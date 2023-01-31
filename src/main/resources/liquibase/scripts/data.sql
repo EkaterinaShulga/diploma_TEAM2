@@ -70,7 +70,8 @@ CREATE TABLE Comment
     createdAt TEXT   NOT NULL,
     pk        BIGSERIAL PRIMARY KEY,
     text      TEXT   NOT NULL,
-        FOREIGN KEY (Ads_pk)  REFERENCES Comment (ad)
+    ad        INT,
+    FOREIGN KEY (ad) REFERENCES Ads (pk)
 );
 
 CREATE TABLE ResponseWrapperAds
