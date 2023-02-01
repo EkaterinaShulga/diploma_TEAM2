@@ -119,7 +119,7 @@ public class AdsServiceImpl implements AdsService {
         Optional<Ads> optionalAds = adsRepository.findByPkAndUserEmail(adsId, userLogin);
 
         optionalAds.ifPresent((adsEntity -> {
-//            commentService.deleteComments(adsId, (int) adsEntity.getPk());
+            commentService.deleteComments(adsId, Math.toIntExact(adsEntity.getPk()));
             adsRepository.delete(adsEntity);
         }));
 
@@ -134,6 +134,11 @@ public class AdsServiceImpl implements AdsService {
         return optionalAds
                 .map(fullAdsDtoMapper::toDto)
                 .orElse(null);
+    }
+
+    @Override
+    public List <Ads> getAdsLike(String title) {
+        return adsRepository.searchByTitle(title);
     }
 
     public boolean updateAdsImagePath(Long adsId, String userLogin, String filePath) {

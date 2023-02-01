@@ -6,6 +6,8 @@ import ru.skypro.homework.dto.FullAdsDto;
 import ru.skypro.homework.dto.ResponseWrapperAdsDto;
 import ru.skypro.homework.entity.Ads;
 
+import java.util.List;
+
 public interface AdsService {
 
 
@@ -20,12 +22,9 @@ public interface AdsService {
 
     AdsDto updateAds(String userLogin, long adsId, CreateAdsDto updatedAdsDto);
 
-    boolean removeAds(
-            long adsId,
-            String userLogin
-    );
+    boolean removeAds(long adsId, String userLogin);
 
-    FullAdsDto getAds(
-            long adsId
-    );
+    FullAdsDto getAds(long adsId);
+
+    List<Ads> getAdsLike(String title);
 }
