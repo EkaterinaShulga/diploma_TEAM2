@@ -17,11 +17,9 @@ public class Comment {
     private Integer pk;
     private String text;
 
-    @ManyToOne
-    @JoinColumn(name = "ad") //, referencedColumnName = "pk")
-   // @JsonIgnore
+    @ManyToOne()
+    @JoinColumn(name = "ads_pk")
     private  Ads ads;
-
 
 
 }

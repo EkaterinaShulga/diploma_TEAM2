@@ -5,14 +5,18 @@ import org.springframework.stereotype.Repository;
 import ru.skypro.homework.entity.Comment;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Integer> {
 
 
-        List<Comment> findCommentsByAdsPk(Long adsPk);
-        Comment findCommentsByAdsPkAndPk(Long adsPk, Integer pk);
+    List<Comment> findCommentsByAdsPk(Long adsPk);
 
-    }
+    Comment findCommentByAdsPk(Long adsPk);
+
+    Optional<Comment> findCommentsByAdsPkAndPk(Long adsPk, Integer pk);
+
+}
 
 

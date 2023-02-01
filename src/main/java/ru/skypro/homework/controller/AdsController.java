@@ -28,6 +28,7 @@ import org.springframework.http.HttpStatus;
 import ru.skypro.homework.service.impl.FileService;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,7 +43,7 @@ import java.util.Optional;
                 @ApiResponse(responseCode = "403", content = @Content())
         }
 )
-public class    AdsController {
+public class AdsController {
     private Logger logger = LoggerFactory.getLogger(AdsController.class);
     private static final String IMAGE_PATH = "/ads";
 
@@ -136,22 +137,6 @@ public class    AdsController {
         return ResponseEntity.ok(adsDto);
     }
 
-
-
-
-
-    @GetMapping("/{ad_pk}/comments") //возвращаем все комментраии по id объявления +
-    public ResponseEntity<List<CommentDto>> getAllCommentsByAdsPk(@PathVariable("ad_pk") Long adPk) {
-        List<CommentDto> allCommentsDto = commentService.getAllCommentsByAdsPk(adPk);
-        if (!allCommentsDto.isEmpty()) {
-            logger.info("get all ads by this adPk and pk");
-            return ResponseEntity.ok(allCommentsDto);
-
-        }
-        return ResponseEntity.notFound().build();
-
-    }
-
     @GetMapping("/me")
     @Operation(
             summary = "getAdsMe",
@@ -166,9 +151,10 @@ public class    AdsController {
         return ResponseEntity.ok(myAds);
     }
 
-    @PostMapping("/{ad_pk}/comments")//создаем комментраии по id объявления +
+    @PostMapping("/{ad_pk}/comments")//создаем Comment по id объявления ++
     public ResponseEntity<CommentDto> addComments(@RequestBody CommentDto commentdto,
                                                   @PathVariable("ad_pk") Long adPk) {
+        logger.info("method AdsController - addComments");
         CommentDto comment2 = commentService.addComments(commentdto, adPk);
         if (comment2 == null) {
             return ResponseEntity.notFound().build();
@@ -176,40 +162,50 @@ public class    AdsController {
         return ResponseEntity.ok(comment2);
     }
 
-    @DeleteMapping("/{ad_pk}/comment/{id}")//удаляем комментраии по id объявления и  id комментария+
-    public ResponseEntity<Comment> deleteComments(@PathVariable("ad_pk") Long adPk,
-                                                  @PathVariable("id") Integer id) {
-        CommentDto comment = commentService.getComments(adPk, id);
-        if (comment == null) {
-            logger.info("Not found ads by this adPk/id");
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-
+    @DeleteMapping("/{ad_pk}/comment/{id}")//удаляем Comment по id объявления и  id комментария++
+    public Optional<HttpStatus> deleteComments(@PathVariable("ad_pk") Long adPk,
+                                               @PathVariable("id") Integer commentPk) {
+        logger.info("method AdsController - deleteComments");
+        boolean answerFromMethod = commentService.deleteComments(adPk, commentPk);
+        if (answerFromMethod) {
+            return Optional.of(HttpStatus.OK);
         } else {
-            commentService.deleteComments(adPk, id);
-            return ResponseEntity.ok().build();
+            return Optional.of(HttpStatus.NOT_FOUND);
         }
-
     }
 
-    @GetMapping("/{ad_pk}/comments/{id}")
-    public CommentDto getComments(@PathVariable("ad_pk") String adPk,
-                                  @PathVariable("id") Integer id) {
-        CommentDto commentDto = new CommentDto(); //из базы
-        logger.info("return AdsComment - getComments");
-        return commentDto;
+    @GetMapping("/{ad_pk}/comments") //возвращаем comments по id Ads ++
+    public ResponseEntity<ResponseWrapperCommentDto> getAllCommentsByAdsPk(@PathVariable("ad_pk") Long adPk) {
+        logger.info("method AdsController - getAllCommentsByAdsPk");
+        ResponseWrapperCommentDto allCommentsDto = commentService.getCommentsByAdsPk(adPk);
+        return ResponseEntity.ok(allCommentsDto);
     }
 
-    @PatchMapping("/{ad_pk}/comment/{id}")//изменяем комментраии по id объявления+
-    public ResponseEntity<CommentDto> updateComments(@PathVariable("ad_pk") Long adPk,
-                                                     @PathVariable("id") Integer id,
-                                                     @RequestBody CommentDto commentUpdate) {
-        Comment comment = commentRepository.findCommentsByAdsPkAndPk(adPk, id);
-        if (comment == null) {
-            logger.warn("Not found comments by this adPk/pk");
+    @GetMapping("/{ad_pk}/comments/{id}")//возвращаем comment по id Ads и id Comment ++
+    public ResponseEntity<CommentDto> getAdsComments(@PathVariable("ad_pk") Long adPk,
+                                                     @PathVariable("id") Integer commentPk) {
+        logger.info("method AdsController - getAdsComments");
+        CommentDto commentDto = commentService.getComments(adPk, commentPk);
+        if (commentDto == null) {
+            logger.info("Not found comments by this " + adPk + " and " + commentPk);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-        commentService.updateComments(commentUpdate, adPk, id);
-        return ResponseEntity.ok(commentUpdate);
+        logger.info("return comment by this " + adPk + " and " + commentPk);
+        return ResponseEntity.ok(commentDto);
+    }
+
+    @PatchMapping("/{ad_pk}/comment/{id}")//изменяем Comment по id объявления и id комментария ++
+    public ResponseEntity<CommentDto> updateComments(@PathVariable("ad_pk") Long adPk,
+                                                     @PathVariable("id") Integer commentPk,
+                                                     @RequestBody CommentDto commentUpdate) {
+        logger.info("method AdsController - updateComments");
+        CommentDto commentDto = commentService.updateComments(adPk, commentPk, commentUpdate);
+        if (commentDto == null) {
+            logger.info("Not found comments by this " + adPk + " and " + commentPk);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } else {
+            return ResponseEntity.ok(commentUpdate);
+        }
     }
 
     @PatchMapping(value = "/{id}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -246,10 +242,10 @@ public class    AdsController {
 
     @GetMapping()
     public ResponseEntity<ResponseWrapperAdsDto> getAll() {
-            return ResponseEntity.ok(adsService.getAllAds());
-
-        }
-
+        return ResponseEntity.ok(adsService.getAllAds());
 
     }
+
+
+}
 
