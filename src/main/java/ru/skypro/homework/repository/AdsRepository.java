@@ -1,6 +1,8 @@
 package ru.skypro.homework.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import ru.skypro.homework.entity.Ads;
 
@@ -16,6 +18,9 @@ public interface AdsRepository extends JpaRepository<Ads, Long> {
     Optional<Ads> findByPkAndUserId(Long id, Long userId);
 
     Optional<Ads> findByPkAndUserEmail(long adsId, String userLogin);
+
+    @Query("SELECT a FROM Ads a WHERE a.title LIKE %:title%")
+    List<Ads> searchByTitle(@Param("title") String title);
 
     List<Ads> findByUserEmail(String userLogin);
 }

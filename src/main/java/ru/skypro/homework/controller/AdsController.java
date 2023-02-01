@@ -239,12 +239,13 @@ public class AdsController {
         }
     }
 
-
     @GetMapping()
     public ResponseEntity<ResponseWrapperAdsDto> getAll() {
         return ResponseEntity.ok(adsService.getAllAds());
 
     }
+
+
 
 
 }
