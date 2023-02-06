@@ -13,12 +13,14 @@ public interface FullAdsDtoMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "firstName", source = "authorFirstName")
     @Mapping(target = "lastName", source = "authorLastName")
+    @Mapping(target = "regDate", ignore = true)
+    @Mapping(target = "city", ignore = true)
     UserDto dtoToUserDto(FullAdsDto dto);
 
     @Mapping(source = "pk", target = "pk")
     @Mapping(target = "user.password", ignore = true)
-    Ads
-    toModel(FullAdsDto dto);
+    @Mapping(target = "author", source = "pk")
+    Ads toModel(FullAdsDto dto);
 
     @Mapping(source = "pk", target = "pk")
     @Mapping(source = "user.firstName", target = "authorFirstName")

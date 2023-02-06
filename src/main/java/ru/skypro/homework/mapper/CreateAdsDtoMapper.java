@@ -11,6 +11,7 @@ import ru.skypro.homework.entity.User;
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING, injectionStrategy = InjectionStrategy.CONSTRUCTOR)
 public interface CreateAdsDtoMapper {
     @Mapping(target = "pk", ignore = true)
+    @Mapping(target = "author", ignore = true)
     @Mapping(target = "image", source = "image")
     Ads toModel(CreateAdsDto dto, User user, String image);
 

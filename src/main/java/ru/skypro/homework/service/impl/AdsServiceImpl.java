@@ -38,6 +38,14 @@ public class AdsServiceImpl implements AdsService {
     private final CreateAdsDtoMapper createAdsDtoMapper;
     private final FullAdsDtoMapper fullAdsDtoMapper;
 
+    /**
+     * Creating of new ad
+     *
+     * @param userLogin - username
+     * @param createAdsDto - created ad
+     * @param image - image path
+     * @return ad created
+     */
     @Override
     public AdsDto createAds(String userLogin, CreateAdsDto createAdsDto, String image) {
         logger.info("Processing AdsServiceImpl:createAds()");
@@ -51,6 +59,13 @@ public class AdsServiceImpl implements AdsService {
         return adsDtoMapper.toDto(adsRepository.save(adsEntity));
     }
 
+    /**
+     * Receive ad by id
+     * The repository method is being used {@link AdsRepository#findById(Object)}
+     * @param id - ad id
+     * @return ad entity
+     * @throws AdsNotFoundException if no ad was found
+     */
     @Override
     public Ads getAdsByPk(long id) {
         logger.info("Processing AdsServiceImpl:getAdsByPk()");
@@ -58,6 +73,12 @@ public class AdsServiceImpl implements AdsService {
                 .orElseThrow(() -> new AdsNotFoundException("Объявление с id " + id + " не найдено!"));
     }
 
+    /**
+     * Receive all ads for user
+     *
+     * @param userLogin - username
+     * @return ad list
+     */
     @Override
     public ResponseWrapperAdsDto getMyAds(String userLogin) {
         logger.info("Processing AdsServiceImpl:getMyAds()");
@@ -75,7 +96,13 @@ public class AdsServiceImpl implements AdsService {
 
         return wrapperAds;
     }
-
+    /**
+     * Receive all Ads
+     * The Service method is being used{@link AdsService#getAllAds()}
+     * wherein the repository method is used to get all declarations{@link AdsRepository#findAll()}
+     *
+     * @return ad list
+     */
     @Override
     public ResponseWrapperAdsDto getAllAds() {
         logger.info("Processing AdsServiceImpl:getAllAds()");
@@ -93,7 +120,14 @@ public class AdsServiceImpl implements AdsService {
 
         return wrapperAds;
     }
-
+    /**
+     * Receive old ad by id, update and save
+     *
+     * @param userLogin - username which should be updated
+     * @param adsId
+     * @param updatedAdsDto - new ad
+     * @return ad update
+     */
     @Override
     public AdsDto updateAds(String userLogin, long adsId, CreateAdsDto updatedAdsDto) {
         logger.info("Processing AdsServiceImpl:updateAds()");
@@ -112,7 +146,14 @@ public class AdsServiceImpl implements AdsService {
                 .map(adsDtoMapper::toDto)
                 .orElse(null);
     }
-
+    /**
+     * Delete ad from DB by id
+     * The repository method is being used {@link AdsRepository#delete(Object)}
+     *
+     * @param adsId - ad id
+     * @param userLogin - user login
+     * @return is present boolean method
+     */
     @Override
     public boolean removeAds(long adsId, String userLogin) {
         logger.info("Processing AdsServiceImpl:removeAds()");
@@ -126,6 +167,12 @@ public class AdsServiceImpl implements AdsService {
         return optionalAds.isPresent();
     }
 
+    /**
+     * Search for a full ad in DB by ID
+     *
+     * @param adsId - ad id
+     * @return present ad
+     */
     @Override
     public FullAdsDto getAds(long adsId) {
         logger.info("Processing AdsServiceImpl:getAds()");
@@ -136,11 +183,25 @@ public class AdsServiceImpl implements AdsService {
                 .orElse(null);
     }
 
+    /**
+     * Search for a ad in DB by part of title
+     *
+     * @param title - part of title
+     * @return present ad
+     */
     @Override
     public List <Ads> getAdsLike(String title) {
         return adsRepository.searchByTitle(title);
     }
 
+    /**
+     * Receive old image by id, update or save
+     *
+     * @param adsId - ad id
+     * @param userLogin - user login
+     * @param filePath - file path
+     * @return image updated
+     */
     public boolean updateAdsImagePath(Long adsId, String userLogin, String filePath) {
         logger.info("Processing AdsServiceImpl:updateAdsImagePath()");
         Optional<Ads> optionalAds = adsRepository.findByPkAndUserEmail(adsId, userLogin);

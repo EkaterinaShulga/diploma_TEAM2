@@ -28,7 +28,14 @@ public class FileService {
 
         return saveUploadedFile(filePrefix, uploadedFile);
     }
-
+    /**
+     * Save Image
+     *
+     * @param filePrefix - image name
+     * @param uploadedFile - image
+     * @return image updated
+     * @throws IOException if image didn't upload
+     */
     public String saveUploadedFile(String filePrefix, MultipartFile uploadedFile) throws IOException {
 
         Path filePath = getFilePath(filePrefix, uploadedFile);
@@ -44,6 +51,14 @@ public class FileService {
         }
     }
 
+    /**
+     * Receive Image path
+     *
+     * @param filePrefix - image name
+     * @param uploadedFile - image
+     * @return image path
+
+     */
     private Path getFilePath(String filePrefix, MultipartFile uploadedFile) {
         String result = filePrefix + "/" +
                 System.currentTimeMillis() / 100 +
@@ -52,6 +67,14 @@ public class FileService {
         return Paths.get(uploadedDir, result);
     }
 
+    /**
+     * Cheking Image extension
+     *
+     * @param contentType - type of image
+     *
+     * @return image extension
+
+     */
     private String getExtension(String contentType) {
         switch (contentType) {
             case MediaType.IMAGE_GIF_VALUE:
@@ -69,6 +92,14 @@ public class FileService {
         return size > SIZE_LIMIT;
     }
 
+    /**
+     * Cheking Image extension
+     *
+     * @param filePath - image path
+     *
+     * @return image removed
+
+     */
     public boolean removeFileByPath(String filePath) throws IOException {
         if (null == filePath) {
             return false;
