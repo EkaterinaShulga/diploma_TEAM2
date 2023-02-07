@@ -11,11 +11,13 @@ DROP TABLE FullAds;
 
 
 --changeset iaktov:2
+create sequence users_id_seq;
+
 CREATE TABLE Users
 (
     email     TEXT NOT NULL,
     firstName TEXT NOT NULL,
-    id        BIGSERIAL PRIMARY KEY,
+    id        bigint NOT NULL DEFAULT nextval('users_id_seq'),
     lastName  TEXT NOT NULL,
     phone     TEXT NOT NULL,
     regDate   TEXT NOT NULL,
@@ -23,6 +25,10 @@ CREATE TABLE Users
     image     TEXT NOT NULL
 
 );
+
+ALTER SEQUENCE users_id_seq
+    OWNED BY Users.id;
+
 CREATE TABLE NewPassword
 (
     currentPassword TEXT NOT NULL,
