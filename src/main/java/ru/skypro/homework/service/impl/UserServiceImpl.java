@@ -28,11 +28,24 @@ public class UserServiceImpl implements UserService {
         this.userMapper = userMapper;
     }
 
+    /**
+     * Find of user by id
+     *
+     * @param id user id
+     * @return user
+     */
     public UserDto findUser(Long id) {
         logger.info("Was invoked method for find user");
         return userMapper.toDto(userRepository.findById(id).get());
     }
 
+    /**
+     * Edit user
+     *
+     * @param userDto data of user
+     * @param userLogin login of user
+     * @return updated user
+     */
     public UserDto editUser(UserDto userDto, String userLogin) {
         logger.info("Was invoked method for edit user");
         System.out.println("login = " + userLogin);
@@ -51,12 +64,24 @@ public class UserServiceImpl implements UserService {
                 .orElse(null);
     }
 
+    /**
+     * Getting all user
+     *
+     * @return Collection of User
+     */
     public Collection<UserDto> getAll() {
         logger.info("Was invoked method for get all users");
         return userMapper.toDtoCollection(userRepository.getAll());
     }
 
-    public UserDto changePassword(PasswordDto passwordDto) {
+    /**
+     * Changing password by user
+     *
+     * @param passwordDto dto for password
+     * @param userLogin username of user
+     * @return updated password
+     */
+    public UserDto changePassword(PasswordDto passwordDto, String userLogin) {
         logger.info("Was invoked method for change password of user");
         if (passwordDto != null){
             User user = userRepository.getUserByPassword(passwordDto.getCurrentPassword());
@@ -68,7 +93,14 @@ public class UserServiceImpl implements UserService {
         return null;
     }
 
+    /**
+     * Getting user by username
+     *
+     * @param userLogin username of user
+     * @return user
+     */
     public User getUserByLogin(String userLogin) {
+        System.out.println("user = "+userRepository.findByEmail(userLogin));
         return userRepository.findByEmail(userLogin)
                 .orElseThrow(UserAlreadyCreatedException::new);
     }
