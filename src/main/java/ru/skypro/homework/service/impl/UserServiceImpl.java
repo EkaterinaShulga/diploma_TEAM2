@@ -100,7 +100,7 @@ public class UserServiceImpl implements UserService {
      * @return user
      */
     public User getUserByLogin(String userLogin) {
-        System.out.println("user = "+userRepository.findByEmail(userLogin));
+
         return userRepository.findByEmail(userLogin)
                 .orElseThrow(UserAlreadyCreatedException::new);
     }
