@@ -1,7 +1,11 @@
 package ru.skypro.homework.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,6 +28,15 @@ public class UserController {
     }
 
     @PatchMapping("/me")
+    @Operation(
+            summary = "updateUser",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "users"),
+            responses = {
+                    @ApiResponse(responseCode = "200", useReturnTypeSchema = true),
+                    @ApiResponse(responseCode = "204", content = @Content()),
+                    @ApiResponse(responseCode = "404", content = @Content())
+            }
+    )
     public ResponseEntity<UserDto> updateUser(@RequestBody UserDto userDto, Authentication authentication) {
         logger.info("Processing updateUser Controller");
         UserDto updatedUser = userService.editUser(userDto, authentication.getName());
@@ -41,6 +54,13 @@ public class UserController {
     }
 
     @PostMapping("/set_password")
+    @Operation(
+            summary = "setPassword",
+            responses = {
+                    @ApiResponse(responseCode = "200", useReturnTypeSchema = true),
+                    @ApiResponse(responseCode = "201", content = @Content())
+            }
+    )
     public ResponseEntity<UserDto> setPassword(@RequestBody PasswordDto password, Authentication authentication) {
         logger.info("Processing setPassword Controller");
         UserDto user = userService.changePassword(password, authentication.getName());

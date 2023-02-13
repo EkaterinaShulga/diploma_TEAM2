@@ -1,6 +1,96 @@
 -- liquibase formatted sql
 
---changeset iaktov:3
+--changeset iaktov:1
+CREATE TABLE Users
+(
+    email     TEXT ,
+    firstName TEXT ,
+    id        bigint primary key ,
+    lastName  TEXT ,
+    phone     TEXT ,
+    regDate   TEXT ,
+    city      TEXT ,
+    image     TEXT
+);
+
+
+CREATE TABLE NewPassword
+(
+    currentPassword TEXT,
+    newPassword     TEXT
+);
+
+CREATE TABLE RegisterReq
+(
+    userName  TEXT,
+    password  TEXT,
+    firstName TEXT,
+    lastName  TEXT,
+    phone     TEXT,
+    role      TEXT
+);
+
+CREATE TABLE LoginReq
+(
+    password TEXT,
+    username TEXT
+
+);
+
+CREATE TABLE CreateAds
+(
+    description TEXT,
+    price       BIGINT,
+    title       TEXT
+
+);
+
+CREATE TABLE Ads
+(
+    author BIGINT,
+    image  TEXT,
+    pk     BIGSERIAL PRIMARY KEY,
+    price  BIGINT,
+    title  TEXT
+
+);
+
+CREATE TABLE Comments
+(
+    author    BIGINT,
+    createdAt TEXT,
+    pk        BIGSERIAL PRIMARY KEY,
+    text      TEXT,
+    ad        INT,
+    FOREIGN KEY (ad) REFERENCES Ads (pk)
+);
+
+CREATE TABLE ResponseWrapperAds
+(
+    count   BIGINT,
+    results BIGSERIAL REFERENCES Comments (pk)
+);
+CREATE TABLE FullAds
+(
+    authorFirstName TEXT,
+    authorLastName  TEXT,
+    description     TEXT,
+    email           TEXT,
+    image           TEXT,
+    phone           TEXT,
+    pk              BIGSERIAL PRIMARY KEY,
+    price           BIGINT,
+    title           TEXT
+
+);
+
+CREATE TABLE ResponseWrapperComment
+(
+    count   BIGINT ,
+    results BIGSERIAL REFERENCES Comments (pk)
+);
+
+--changeset iaktov:2
 DROP TABLE NewPassword;
 DROP TABLE RegisterReq;
 DROP TABLE LoginReq;
@@ -9,99 +99,13 @@ DROP TABLE ResponseWrapperAds;
 DROP TABLE ResponseWrapperComment;
 DROP TABLE FullAds;
 
-
---changeset iaktov:2
+--changeset anmalashenko:3
+alter table Users add column enabled boolean;
 create sequence users_id_seq;
+alter table Users alter column id set default nextval('users_id_seq');
+alter sequence users_id_seq OWNED BY Users.id;
 
-CREATE TABLE Users
-(
-    email     TEXT NOT NULL,
-    firstName TEXT NOT NULL,
-    id        bigint NOT NULL DEFAULT nextval('users_id_seq'),
-    lastName  TEXT NOT NULL,
-    phone     TEXT NOT NULL,
-    regDate   TEXT NOT NULL,
-    city      TEXT NOT NULL,
-    image     TEXT NOT NULL
-
+create table if not exists authorities (
+                                           username  varchar(255) not null primary key,
+                                           authority varchar(32)
 );
-
-ALTER SEQUENCE users_id_seq
-    OWNED BY Users.id;
-
-CREATE TABLE NewPassword
-(
-    currentPassword TEXT NOT NULL,
-    newPassword     TEXT NOT NULL
-);
-
-CREATE TABLE RegisterReq
-(
-    userName  TEXT NOT NULL,
-    password  TEXT NOT NULL,
-    firstName TEXT NOT NULL,
-    lastName  TEXT NOT NULL,
-    phone     TEXT NOT NULL,
-    role      TEXT
-);
-
-CREATE TABLE LoginReq
-(
-    password TEXT NOT NULL,
-    username TEXT NOT NULL
-
-);
-
-CREATE TABLE CreateAds
-(
-    description TEXT   NOT NULL,
-    price       BIGINT NOT NULL,
-    title       TEXT   NOT NULL
-
-);
-
-CREATE TABLE Ads
-(
-    author BIGINT NOT NULL,
-    image  TEXT   NOT NULL,
-    pk     BIGSERIAL PRIMARY KEY,
-    price  BIGINT NOT NULL,
-    title  TEXT   NOT NULL
-
-);
-
-CREATE TABLE Comment
-(
-    author    BIGINT NOT NULL,
-    createdAt TEXT   NOT NULL,
-    pk        BIGSERIAL PRIMARY KEY,
-    text      TEXT   NOT NULL,
-    ad        INT,
-    FOREIGN KEY (ad) REFERENCES Ads (pk)
-);
-
-CREATE TABLE ResponseWrapperAds
-(
-    count   BIGINT NOT NULL,
-    results BIGSERIAL REFERENCES Comment (pk)
-);
-CREATE TABLE FullAds
-(
-    authorFirstName TEXT   NOT NULL,
-    authorLastName  TEXT   NOT NULL,
-    description     TEXT   NOT NULL,
-    email           TEXT   NOT NULL,
-    image           TEXT   NOT NULL,
-    phone           TEXT   NOT NULL,
-    pk              BIGSERIAL PRIMARY KEY,
-    price           BIGINT NOT NULL,
-    title           TEXT   NOT NULL
-
-);
-
-CREATE TABLE ResponseWrapperComment
-(
-    count   BIGINT NOT NULL,
-    results BIGSERIAL REFERENCES Comment (pk)
-);
-
