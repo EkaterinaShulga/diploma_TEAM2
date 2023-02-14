@@ -6,6 +6,7 @@ import java.util.List;
 
 @Data
 public class ResponseWrapperCommentDto {
-    private long count;
+    private Integer count;
     private List<CommentDto> results;
+
 }

@@ -1,103 +1,50 @@
 -- liquibase formatted sql
 
---changeset iaktov:1
+--changeset iaktov:2
 CREATE TABLE Users
 (
-    email     TEXT ,
-    firstName TEXT ,
-    id        bigint primary key ,
-    lastName  TEXT ,
-    phone     TEXT ,
-    regDate   TEXT ,
-    city      TEXT ,
-    image     TEXT
-);
-
-
-CREATE TABLE NewPassword
-(
-    currentPassword TEXT,
-    newPassword     TEXT
-);
-
-CREATE TABLE RegisterReq
-(
-    userName  TEXT,
-    password  TEXT,
+    email     TEXT,
     firstName TEXT,
+    id        bigint primary key,
     lastName  TEXT,
     phone     TEXT,
-    role      TEXT
-);
-
-CREATE TABLE LoginReq
-(
-    password TEXT,
-    username TEXT
-
-);
-
-CREATE TABLE CreateAds
-(
-    description TEXT,
-    price       BIGINT,
-    title       TEXT
+    regDate   TEXT,
+    city      TEXT
 
 );
 
 CREATE TABLE Ads
 (
-    author BIGINT,
-    image  TEXT,
-    pk     BIGSERIAL PRIMARY KEY,
+author BIGSERIAL,
+    image  bytea,
+    pk     bigint PRIMARY KEY,
     price  BIGINT,
-    title  TEXT
+    title  TEXT,
+    FOREIGN KEY (author) REFERENCES Users (id)
 
 );
 
 CREATE TABLE Comments
 (
-    author    BIGINT,
-    createdAt TEXT,
-    pk        BIGSERIAL PRIMARY KEY,
-    text      TEXT,
-    ad        INT,
-    FOREIGN KEY (ad) REFERENCES Ads (pk)
+ author     bigint,
+    created_at TEXT,
+    pk         bigint PRIMARY KEY,
+    text       TEXT,
+    ads_pk     BIGSERIAL,
+    FOREIGN KEY (author) REFERENCES Ads (author),
+    FOREIGN KEY (ads_pk) REFERENCES Ads (pk) ON DELETE CASCADE
 );
 
-CREATE TABLE ResponseWrapperAds
+
+create table Images
 (
-    count   BIGINT,
-    results BIGSERIAL REFERENCES Comments (pk)
+    fileSize  bigint,
+    mediaType varchar(255),
+    image     bytea,
+    id        bigint PRIMARY KEY,
+    ads_pk    BIGSERIAL,
+    FOREIGN KEY (ads_pk) REFERENCES Ads (pk) ON DELETE CASCADE
 );
-CREATE TABLE FullAds
-(
-    authorFirstName TEXT,
-    authorLastName  TEXT,
-    description     TEXT,
-    email           TEXT,
-    image           TEXT,
-    phone           TEXT,
-    pk              BIGSERIAL PRIMARY KEY,
-    price           BIGINT,
-    title           TEXT
-
-);
-
-CREATE TABLE ResponseWrapperComment
-(
-    count   BIGINT ,
-    results BIGSERIAL REFERENCES Comments (pk)
-);
-
---changeset iaktov:2
-DROP TABLE NewPassword;
-DROP TABLE RegisterReq;
-DROP TABLE LoginReq;
-DROP TABLE CreateAds;
-DROP TABLE ResponseWrapperAds;
-DROP TABLE ResponseWrapperComment;
-DROP TABLE FullAds;
 
 --changeset anmalashenko:3
 alter table Users add column enabled boolean;

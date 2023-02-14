@@ -14,6 +14,8 @@ import ru.skypro.homework.service.UserService;
 
 import java.util.Optional;
 
+import java.util.Optional;
+
 @Service
 public class AuthServiceImpl implements AuthService {
 
@@ -21,8 +23,8 @@ public class AuthServiceImpl implements AuthService {
 
     private final PasswordEncoder encoder;
     private final UserRepository userRepository;
-
-    public AuthServiceImpl(UserDetailsManager manager,
+    
+public AuthServiceImpl(UserDetailsManager manager,
                            UserRepository userRepository) {
         this.manager = manager;
         this.userRepository = userRepository;
@@ -53,7 +55,7 @@ public class AuthServiceImpl implements AuthService {
                         .build()
         );
 
-        Optional<ru.skypro.homework.entity.User> user = userRepository.findByEmail(registerReq.getUsername());
+ Optional<ru.skypro.homework.entity.User> user = userRepository.findByEmail(registerReq.getUsername());
         ru.skypro.homework.entity.User user1 = user.get();
         user1.setFirstName(registerReq.getFirstName());
         user1.setLastName(registerReq.getLastName());

@@ -12,6 +12,7 @@ import javax.sql.DataSource;
 import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
+//@EnableWebSecurity
 public class WebSecurityConfig {
 
     private static final String[] AUTH_WHITELIST = {
@@ -19,6 +20,7 @@ public class WebSecurityConfig {
             "/swagger-ui.html",
             "/v3/api-docs",
             "/webjars/**",
+            "/ads",
             "/login", "/register", "/ads", "/users/me"
     };
 
@@ -27,6 +29,16 @@ public class WebSecurityConfig {
         return new JdbcUserDetailsManager(dataSource);
     }
 
+   /* @Bean
+    public UserDetailsManager userDetailsService(DataSource dataSource) {
+        return new JdbcUserDetailsManager(dataSource);
+    }*/
+ /* @Bean
+  public JdbcUserDetailsManager userDetailsService(DataSource dataSource) {
+JdbcUserDetailsManager manager = new JdbcUserDetailsManager( dataSource);
+      return  manager;
+  }*/
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -34,15 +46,18 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests((authz) ->
                         authz
                                 .mvcMatchers(AUTH_WHITELIST).permitAll()
-                                .mvcMatchers("/ads/**", "/users/**")
-                                .authenticated()
+                                .mvcMatchers("/users/avatar/**").permitAll()
+                                .mvcMatchers("/ads/**", "/users/**").authenticated()
 
                 )
                 .cors().and()
                 .httpBasic(withDefaults());
         return http.build();
     }
-
+    /*@Bean
+    public PasswordEncoder passwordEncoder() { //кодировщик
+        return new BCryptPasswordEncoder();
+    }*/
 
 }
 

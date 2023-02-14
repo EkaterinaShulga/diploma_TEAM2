@@ -13,7 +13,6 @@ import ru.skypro.homework.repository.AdsRepository;
 import ru.skypro.homework.repository.CommentRepository;
 import ru.skypro.homework.service.CommentService;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,89 +23,109 @@ public class CommentServiceImpl implements CommentService {
 
     private final CommentRepository commentRepository;
     private final AdsRepository adsRepository;
-
     private final CommentMapper commentMapper;
 
 
+    /**
+     * {@link AdsRepository #findAdsByPk(Long)} возвращает {@code Ads} из БД .<br>
+     * {@link CommentMapper #toComment(Object)}, преобразует {@code CommentDto(DTO)} в {@code Comment(Entity)}. <br>
+     * {@link CommentRepository#save(Object)}сохраняет в БД {@code Comment}. <br>
+     * {@link CommentMapper #toDto(Object)} преобразует  {@code Comment} в  {@code CommentDto} <br>
+     *
+     * @see CommentDto
+     * @see Comment
+     * @see CommentMapper
+     */
     @Override
-    public CommentDto addComments(CommentDto commentDto, Long adsPk) { //+
+    public CommentDto addComment(CommentDto commentDto, Long adsPk) {
         logger.info("method CommentServiceImpl - addComments");
         Ads ads = adsRepository.findAdsByPk(adsPk);
-        Comment commentEntity = commentMapper.toComment(commentDto);
-        Comment comment = new Comment();
-        if (ads == null) {
-            logger.info("not found ads with apsPk " + adsPk);
-            return null;
-        } else {
-            comment.setAds(ads);
-            comment.setAuthor(commentEntity.getAuthor());
-            comment.setPk(commentEntity.getPk());
-            comment.setText(commentEntity.getText());
-            comment.setCreatedAt((commentEntity.getCreatedAt()));
-            commentRepository.save(comment);
-            logger.info("create new comment");
-        }
-
+        Comment comment = commentMapper.toComment(commentDto, ads);
+        commentRepository.save(comment);
+        logger.info("create new comment");
         return commentMapper.toDto(comment);
+    }
+
+
+    /**
+     * {@link CommentRepository #getCommentsByAdsPk(Long)} возвращает все {@code Comments} из БД <br>
+     * в {@code List<Comment>}<br>
+     * {@link CommentMapper #toListDto(Object)} преобразует {@code List<Comment>} в {@code List<CommentDto>}<br>
+     *
+     * @see ResponseWrapperCommentDto
+     * @see CommentMapper
+     */
+    @Override
+    public ResponseWrapperCommentDto getCommentsByAdsPk(Long adsPk) {
+        logger.info("method CommentServiceImpl - getCommentsByAdsPk");
+        List<Comment> allComments = commentRepository.getCommentsByAdsPk(adsPk);
+        logger.info("return all ads by this adPk");
+        return commentMapper.toResponseWrapperCommentDto(commentMapper.toListDto(allComments), allComments.size());
 
     }
 
+    /**
+     * {@link CommentRepository #findCommentByAdsPkAndPk(Long, Integer)} возвращает {@code Comment} из БД <br>
+     * {@link CommentMapper #toDto(Object)} преобразует {@code comment(Entity)} в {@code commentDto(DTO)}   <br>
+     *
+     * @see CommentMapper
+     * @see CommentDto
+     * @see Comment
+     */
     @Override
-    public ResponseWrapperCommentDto getCommentsByAdsPk(Long adsPk) {//+
-        logger.info("method CommentServiceImpl - getCommentsByAdsPks");
-        List<Comment> allComments = commentRepository.findCommentsByAdsPk(adsPk);
-        ResponseWrapperCommentDto wrapperCommentDto = new ResponseWrapperCommentDto();
-        if (allComments.isEmpty()) {
-            logger.info("Not found ads by this adPk");
-            wrapperCommentDto.setCount(0);
-            wrapperCommentDto.setResults(Collections.emptyList());
-        } else {
-            wrapperCommentDto.setCount(allComments.size());
-            wrapperCommentDto.setResults(commentMapper.toListDto(allComments));
-            logger.info("return all ads by this adPk");
-        }
-
-        return wrapperCommentDto;
-    }
-
-    @Override
-    public CommentDto getComments(Long adsPk, Integer pk) {//+
+    public CommentDto getComments(Long adsPk, Integer pk) {
         logger.info("method CommentServiceImpl - getComments");
-        Optional<Comment> commentOptional = commentRepository.findCommentsByAdsPkAndPk(adsPk, pk);
+        Optional<Comment> commentOptional = commentRepository.findCommentByAdsPkAndPk(adsPk, pk);
         return commentOptional
                 .map(commentMapper::toDto)
                 .orElse(null);
 
     }
 
+    /**
+     * {@link CommentRepository #findCommentByAdsPkAndPk(Long, Integer)} возвращает {@code Comment} из БД <br>
+     *
+     * @see Comment
+     */
     @Override
-    public CommentDto updateComments(Long adsPk, Integer pk, CommentDto commentUpdateDto) {//+
+    public Comment getComment(Long adsPk, Integer pk) {
+        logger.info("method CommentServiceImpl - getComment");
+        return commentRepository.findCommentByAdsPkAndPk(adsPk, pk).orElse(null);
+    }
+
+    /**
+     * {@link CommentRepository #findCommentByAdsPkAndPk(Long, Integer)} возвращает {@code Comment} из БД <br>
+     * {@link CommentRepository#save(Object)} сохраняет в БД измененный {@code Comment}. <br>
+     * {@link CommentMapper #toDto(Object)} преобразует  {@code Comment} в  {@code CommentDto} <br>
+     *
+     * @see CommentDto
+     * @see Comment
+     * @see CommentMapper
+     */
+    @Override
+    public CommentDto updateComments(Long adsPk, Integer pk, CommentDto commentUpdateDto) {
         logger.info("method CommentServiceImpl - updateComments");
-        Ads ads = adsRepository.findAdsByPk(adsPk);
-        Optional<Comment> commentOptional = commentRepository.findCommentsByAdsPkAndPk(adsPk, pk);// получаем entity из базы
-        commentOptional.ifPresent(commentEntity -> {
-            commentEntity.setAuthor(commentUpdateDto.getAuthor());
-            commentEntity.setCreatedAt(commentUpdateDto.getCreatedAt());
-            commentEntity.setText(commentUpdateDto.getText());
-            commentEntity.setAds(ads);
+        Comment commentUpdate = commentRepository.getCommentByAdsPkAndPk(adsPk, pk);
+        commentUpdate.setText(commentUpdateDto.getText());
+        commentRepository.save(commentUpdate);
+        return commentMapper.toDto(commentUpdate);
 
-            commentRepository.save(commentEntity);
-            logger.info("return new AdsComment - updateComments");
-        });
-        return commentOptional
-                .map(commentMapper::toDto)
-                .orElse(null);
     }
 
 
+    /**
+     * {@link CommentRepository #getCommentByAdsPkAndPk(Long, Integer)} возвращает из БД {@code Comment} <br>
+     * {@link CommentRepository #delete(Object)} удаляет {@code Comment} из БД  <br>,
+     *
+     * @see CommentDto
+     * @see Comment
+     */
     @Override
-    public boolean deleteComments(Long adsPk, Integer pk) {//+
+    public void deleteComment(Long adsPk, Integer pk) {
         logger.info("method CommentServiceImpl - deleteComments");
-        Optional<Comment> commentOptional = commentRepository.findCommentsByAdsPkAndPk(adsPk, pk);
-        commentOptional.ifPresent((commentRepository::delete));
-        logger.info("delete AdsComment");
-        logger.info("Not found comments by this adPk/pk");
-        return commentOptional.isPresent();
+        Comment comment = commentRepository.getCommentByAdsPkAndPk(adsPk, pk);
+        commentRepository.delete(comment);
+
     }
 
 }

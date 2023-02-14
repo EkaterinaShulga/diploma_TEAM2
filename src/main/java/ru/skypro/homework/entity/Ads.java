@@ -1,6 +1,6 @@
 package ru.skypro.homework.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Data;
 
 import javax.persistence.*;
@@ -10,22 +10,20 @@ import java.util.List;
 @Entity
 @Table(name = "Ads")
 public class Ads {
-
-    private long author;
-    private String image;
-
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long pk;
     private long price;
     private String title;
     private String description;
 
     @ManyToOne
+    @JoinColumn(name = "id")
     private User user;
+    @OneToMany(mappedBy = "ads", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    List<Comment> comments;
+    @OneToMany(mappedBy = "ads", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Image> image;
 
 
-   // @OneToMany()
-  // @JsonIgnore
-  //  List<Comment> comment;
 }
