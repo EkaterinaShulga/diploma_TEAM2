@@ -15,7 +15,7 @@ CREATE TABLE Users
 
 CREATE TABLE Ads
 (
-    author BIGSERIAL,
+author BIGSERIAL,
     image  bytea,
     pk     bigint PRIMARY KEY,
     price  BIGINT,
@@ -24,17 +24,17 @@ CREATE TABLE Ads
 
 );
 
-CREATE TABLE Comment
+CREATE TABLE Comments
 (
-    author     bigint,
+ author     bigint,
     created_at TEXT,
     pk         bigint PRIMARY KEY,
     text       TEXT,
     ads_pk     BIGSERIAL,
     FOREIGN KEY (author) REFERENCES Ads (author),
     FOREIGN KEY (ads_pk) REFERENCES Ads (pk) ON DELETE CASCADE
-
 );
+
 
 create table Images
 (
@@ -44,17 +44,15 @@ create table Images
     id        bigint PRIMARY KEY,
     ads_pk    BIGSERIAL,
     FOREIGN KEY (ads_pk) REFERENCES Ads (pk) ON DELETE CASCADE
-)
+);
 
---changeset shulga:3
-create table if not exists authorities (
-    username  varchar(255) primary key,
-    authority varchar(32)
-    );
-
+--changeset anmalashenko:3
 alter table Users add column enabled boolean;
 create sequence users_id_seq;
 alter table Users alter column id set default nextval('users_id_seq');
 alter sequence users_id_seq OWNED BY Users.id;
 
-
+create table if not exists authorities (
+                                           username  varchar(255) not null primary key,
+                                           authority varchar(32)
+);

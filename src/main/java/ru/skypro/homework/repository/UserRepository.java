@@ -16,11 +16,14 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query(value = "SELECT * FROM users WHERE password = :password", nativeQuery = true)
     User getUserByPassword(String password);
-    
-    public Optional<User> findByEmail(String userLogin);
+
 
     @Query(value = "SELECT * FROM users WHERE first_name = :firstName AND last_name = :lastName", nativeQuery = true)
     Optional<User> getUserByFirstNameAndLastName(String firstName, String lastName);
 
+
+
+    @Query(value = "SELECT * FROM users WHERE username = :userLogin", nativeQuery = true)
+    Optional<User> findByEmail(String userLogin);
 
 }
