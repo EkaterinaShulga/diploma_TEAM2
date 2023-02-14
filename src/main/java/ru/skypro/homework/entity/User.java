@@ -1,17 +1,17 @@
 package ru.skypro.homework.entity;
 
+import lombok.Data;
 import ru.skypro.homework.dto.Role;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
-
+@Data
 @Entity(name = "users")
 public class User {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String firstName;
     private String lastName;
@@ -19,15 +19,16 @@ public class User {
     private String email;
     private String regDate;
     private String city;
-    private String image;
     private String password;
     private Role role;
     private String username;
 
+    @OneToMany(mappedBy = "user")
+    private List<Ads> allAds;
     public User() {
     }
 
-    public User(Long id, String firstName, String lastName, String phone, String email, String regDate, String city, String image, String password, Role role, String username) {
+    public User(Long id, String firstName, String lastName, String phone, String email, String regDate, String city,  String password, Role role, String username) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -35,20 +36,18 @@ public class User {
         this.email = email;
         this.regDate = regDate;
         this.city = city;
-        this.image = image;
         this.password = password;
         this.role = role;
         this.username = username;
     }
 
-    public User(String firstName, String lastName, String phone, String email, String regDate, String city, String image, String password, Role role, String username) {
+    public User(String firstName, String lastName, String phone, String email, String regDate, String city, String password, Role role, String username) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.phone = phone;
         this.email = email;
         this.regDate = regDate;
         this.city = city;
-        this.image = image;
         this.password = password;
         this.role = role;
         this.username = username;
@@ -94,13 +93,6 @@ public class User {
         this.city = city;
     }
 
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
-    }
 
     public Long getId() {
         return id;
@@ -147,12 +139,15 @@ public class User {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return Objects.equals(id, user.id) && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(phone, user.phone) && Objects.equals(email, user.email) && Objects.equals(regDate, user.regDate) && Objects.equals(city, user.city) && Objects.equals(image, user.image);
+        return Objects.equals(id, user.id) && Objects.equals(firstName, user.firstName)
+                && Objects.equals(lastName, user.lastName) && Objects.equals(phone, user.phone)
+                && Objects.equals(email, user.email) && Objects.equals(regDate, user.regDate)
+                && Objects.equals(city, user.city);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, firstName, lastName, phone, email, regDate, city, image);
+        return Objects.hash(id, firstName, lastName, phone, email, regDate, city);
     }
 
     @Override
@@ -165,7 +160,6 @@ public class User {
                 ", email='" + email + '\'' +
                 ", regDate='" + regDate + '\'' +
                 ", city='" + city + '\'' +
-                ", image='" + image + '\'' +
                 '}';
     }
 }

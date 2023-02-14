@@ -1,101 +1,60 @@
 -- liquibase formatted sql
 
---changeset iaktov:3
-DROP TABLE NewPassword;
-DROP TABLE RegisterReq;
-DROP TABLE LoginReq;
-DROP TABLE CreateAds;
-DROP TABLE ResponseWrapperAds;
-DROP TABLE ResponseWrapperComment;
-DROP TABLE FullAds;
-
-
 --changeset iaktov:2
 CREATE TABLE Users
 (
-    email     TEXT NOT NULL,
-    firstName TEXT NOT NULL,
-    id        BIGSERIAL PRIMARY KEY,
-    lastName  TEXT NOT NULL,
-    phone     TEXT NOT NULL,
-    regDate   TEXT NOT NULL,
-    city      TEXT NOT NULL,
-    image     TEXT NOT NULL
-
-);
-CREATE TABLE NewPassword
-(
-    currentPassword TEXT NOT NULL,
-    newPassword     TEXT NOT NULL
-);
-
-CREATE TABLE RegisterReq
-(
-    userName  TEXT NOT NULL,
-    password  TEXT NOT NULL,
-    firstName TEXT NOT NULL,
-    lastName  TEXT NOT NULL,
-    phone     TEXT NOT NULL,
-    role      TEXT
-);
-
-CREATE TABLE LoginReq
-(
-    password TEXT NOT NULL,
-    username TEXT NOT NULL
-
-);
-
-CREATE TABLE CreateAds
-(
-    description TEXT   NOT NULL,
-    price       BIGINT NOT NULL,
-    title       TEXT   NOT NULL
+    email     TEXT,
+    firstName TEXT,
+    id        bigint primary key,
+    lastName  TEXT,
+    phone     TEXT,
+    regDate   TEXT,
+    city      TEXT
 
 );
 
 CREATE TABLE Ads
 (
-    author BIGINT NOT NULL,
-    image  TEXT   NOT NULL,
-    pk     BIGSERIAL PRIMARY KEY,
-    price  BIGINT NOT NULL,
-    title  TEXT   NOT NULL
+    author BIGSERIAL,
+    image  bytea,
+    pk     bigint PRIMARY KEY,
+    price  BIGINT,
+    title  TEXT,
+    FOREIGN KEY (author) REFERENCES Users (id)
 
 );
 
 CREATE TABLE Comment
 (
-    author    BIGINT NOT NULL,
-    createdAt TEXT   NOT NULL,
-    pk        BIGSERIAL PRIMARY KEY,
-    text      TEXT   NOT NULL,
-    ad        INT,
-    FOREIGN KEY (ad) REFERENCES Ads (pk)
-);
-
-CREATE TABLE ResponseWrapperAds
-(
-    count   BIGINT NOT NULL,
-    results BIGSERIAL REFERENCES Comment (pk)
-);
-CREATE TABLE FullAds
-(
-    authorFirstName TEXT   NOT NULL,
-    authorLastName  TEXT   NOT NULL,
-    description     TEXT   NOT NULL,
-    email           TEXT   NOT NULL,
-    image           TEXT   NOT NULL,
-    phone           TEXT   NOT NULL,
-    pk              BIGSERIAL PRIMARY KEY,
-    price           BIGINT NOT NULL,
-    title           TEXT   NOT NULL
+    author     bigint,
+    created_at TEXT,
+    pk         bigint PRIMARY KEY,
+    text       TEXT,
+    ads_pk     BIGSERIAL,
+    FOREIGN KEY (author) REFERENCES Ads (author),
+    FOREIGN KEY (ads_pk) REFERENCES Ads (pk) ON DELETE CASCADE
 
 );
 
-CREATE TABLE ResponseWrapperComment
+create table Images
 (
-    count   BIGINT NOT NULL,
-    results BIGSERIAL REFERENCES Comment (pk)
-);
+    fileSize  bigint,
+    mediaType varchar(255),
+    image     bytea,
+    id        bigint PRIMARY KEY,
+    ads_pk    BIGSERIAL,
+    FOREIGN KEY (ads_pk) REFERENCES Ads (pk) ON DELETE CASCADE
+)
+
+--changeset shulga:3
+create table if not exists authorities (
+    username  varchar(255) primary key,
+    authority varchar(32)
+    );
+
+alter table Users add column enabled boolean;
+create sequence users_id_seq;
+alter table Users alter column id set default nextval('users_id_seq');
+alter sequence users_id_seq OWNED BY Users.id;
+
 

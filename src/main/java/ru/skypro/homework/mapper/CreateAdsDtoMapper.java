@@ -1,19 +1,25 @@
 package ru.skypro.homework.mapper;
 
-import org.mapstruct.InjectionStrategy;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingConstants;
+import org.mapstruct.*;
 import ru.skypro.homework.dto.CreateAdsDto;
 import ru.skypro.homework.entity.Ads;
 import ru.skypro.homework.entity.User;
 
+
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING, injectionStrategy = InjectionStrategy.CONSTRUCTOR)
 public interface CreateAdsDtoMapper {
+
     @Mapping(target = "pk", ignore = true)
-    @Mapping(target = "image", source = "image")
-    Ads toModel(CreateAdsDto dto, User user, String image);
+    Ads toModel(CreateAdsDto createAdsDto, User user);
+
+    @AfterMapping
+    default void getUser(@MappingTarget Ads ads, User user) {
+        ads.setUser(user);
+    }
+
 
     CreateAdsDto toDto(Ads entity);
+
+
 }
 

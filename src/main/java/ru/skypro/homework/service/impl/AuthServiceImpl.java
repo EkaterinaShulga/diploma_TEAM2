@@ -8,7 +8,10 @@ import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Service;
 import ru.skypro.homework.dto.RegisterReq;
 import ru.skypro.homework.dto.Role;
+import ru.skypro.homework.repository.UserRepository;
 import ru.skypro.homework.service.AuthService;
+
+import java.util.Optional;
 
 @Service
 public class AuthServiceImpl implements AuthService {
@@ -16,11 +19,13 @@ public class AuthServiceImpl implements AuthService {
     private final UserDetailsManager manager;
 
     private final PasswordEncoder encoder;
-
-    public AuthServiceImpl(UserDetailsManager manager) {
-        this.manager = manager;
-        this.encoder = new BCryptPasswordEncoder();
-    }
+    private final UserRepository userRepository;
+    public AuthServiceImpl(UserDetailsManager manager,
+                           UserRepository userRepository) {
+            this.manager = manager;
+            this.userRepository = userRepository;
+            this.encoder = new BCryptPasswordEncoder();
+        }
 
     @Override
     public boolean login(String userName, String password) {
@@ -45,6 +50,13 @@ public class AuthServiceImpl implements AuthService {
                         .roles(role.name())
                         .build()
         );
+
+       /* Optional<ru.skypro.homework.entity.User> user = userRepository.findByEmail(registerReq.getUsername());
+        ru.skypro.homework.entity.User user1 = user.get();
+        user1.setFirstName(registerReq.getFirstName());
+        user1.setLastName(registerReq.getLastName());
+        user1.setPhone(registerReq.getPhone());
+        userRepository.save(user1);*/
         return true;
     }
 }

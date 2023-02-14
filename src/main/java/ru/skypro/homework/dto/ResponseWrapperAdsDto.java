@@ -6,6 +6,6 @@ import java.util.List;
 
 @Data
 public class ResponseWrapperAdsDto {
-    private long count;
+    private Integer count;
     private List<AdsDto> results;
 }

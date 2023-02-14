@@ -16,6 +16,7 @@ public interface AdsRepository extends JpaRepository<Ads, Long> {
     int countByTitleAndUserId(String title, Long userId);
 
     Optional<Ads> findByPkAndUserId(Long id, Long userId);
+   Optional<Ads> findByPk(Long id);
 
     Optional<Ads> findByPkAndUserEmail(long adsId, String userLogin);
 
@@ -23,4 +24,7 @@ public interface AdsRepository extends JpaRepository<Ads, Long> {
     List<Ads> searchByTitle(@Param("title") String title);
 
     List<Ads> findByUserEmail(String userLogin);
+
+
+
 }
