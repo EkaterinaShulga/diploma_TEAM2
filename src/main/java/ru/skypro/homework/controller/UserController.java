@@ -20,7 +20,7 @@ import java.util.Collection;
 @CrossOrigin(value = "http://localhost:3000")
 @RequestMapping("/users")
 public class UserController {
-    private final Logger logger = LoggerFactory.getLogger(AdsController.class);
+    private final Logger logger = LoggerFactory.getLogger(UserController.class);
     private final UserService userService;
 
     public UserController(UserService userService) {

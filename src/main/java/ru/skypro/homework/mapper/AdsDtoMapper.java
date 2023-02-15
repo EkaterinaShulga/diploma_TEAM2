@@ -11,7 +11,8 @@ import java.util.stream.Collectors;
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING, injectionStrategy = InjectionStrategy.CONSTRUCTOR)
 public interface AdsDtoMapper {
 
-    @Mapping(source = "user.id", target = "author")
+   @Mapping(source = "user.id", target = "author")
+    @Mapping(source = "pk", target = "pk")
     @Mapping(source = "image", target = "image", qualifiedByName = "getReferencesForImages")
     AdsDto toDto(Ads ads);
 

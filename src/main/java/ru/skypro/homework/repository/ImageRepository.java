@@ -7,7 +7,6 @@ import ru.skypro.homework.entity.Image;
 import java.util.List;
 
 @Repository
-public interface ImageRepository extends JpaRepository<Image, Integer> {
+public interface ImageRepository extends JpaRepository<Image, Long> {
 
-   Image getImageById(long id);
 }

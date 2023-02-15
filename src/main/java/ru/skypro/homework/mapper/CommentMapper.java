@@ -20,7 +20,7 @@ import java.util.List;
 @Mapper(componentModel = "spring", uses = {AdsDtoMapper.class})
 public interface CommentMapper {
 
-    @Mapping(source = "user.id", target = "author")
+  //  @Mapping(source = "user.id", target = "id")
     CommentDto toDto(Comment comment);
 
     List<CommentDto> toListDto(List<Comment> comments);

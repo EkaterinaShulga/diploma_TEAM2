@@ -9,8 +9,10 @@ import ru.skypro.homework.entity.User;
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING, injectionStrategy = InjectionStrategy.CONSTRUCTOR)
 public interface CreateAdsDtoMapper {
 
+
     @Mapping(target = "pk", ignore = true)
     Ads toModel(CreateAdsDto createAdsDto, User user);
+    Ads toModel(CreateAdsDto createAdsDto);
 
     @AfterMapping
     default void getUser(@MappingTarget Ads ads, User user) {

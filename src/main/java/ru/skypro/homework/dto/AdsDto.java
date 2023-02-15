@@ -6,9 +6,9 @@ import java.util.List;
 
 @Data
 public class AdsDto {
-    private long author;
+    private Long author;
     private List<String> image;
-    private long pk;
+    private Long pk;
     private long price;
     private String title;
 }

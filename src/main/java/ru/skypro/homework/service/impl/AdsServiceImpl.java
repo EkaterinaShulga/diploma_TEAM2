@@ -1,6 +1,7 @@
 package ru.skypro.homework.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,22 +25,21 @@ import ru.skypro.homework.service.CommentService;
 import ru.skypro.homework.service.ImageService;
 
 
+import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-
 @RequiredArgsConstructor
 @Service
 public class AdsServiceImpl implements AdsService {
-    private final Logger logger = LoggerFactory.getLogger(AdsController.class);
+    private final Logger logger = LoggerFactory.getLogger(AdsServiceImpl.class);
     @Value("${uploaded.max_file_size}")
     private static int SIZE_LIMIT;
     private final FileService fileService;
     private final AdsRepository adsRepository;
     private final UserServiceImpl usersService;
-    private final CommentService commentService;
     private final AdsDtoMapper adsDtoMapper;
     private final CreateAdsDtoMapper createAdsDtoMapper;
     private final FullAdsDtoMapper fullAdsDtoMapper;
@@ -50,12 +50,13 @@ public class AdsServiceImpl implements AdsService {
         logger.info("Processing AdsServiceImpl:createAds()");
         User user = usersService.getUserByLogin(userLogin);
         int exist = adsRepository.countByTitleAndUserId(createAdsDto.getTitle(), user.getId());
+
         if (exist > 0) {
             return null;
         }
         Ads entityAds = createAdsDtoMapper.toModel(createAdsDto, user);
-        adsRepository.save(entityAds);
-        Image imageForAds = imageService.createImage(image, entityAds);
+        Ads adsSaved = adsRepository.save(entityAds);
+        Image imageForAds = imageService.createImage(image, adsSaved);
 
         List<Image> allImage = new ArrayList<>();
         allImage.add(imageForAds);
@@ -77,40 +78,12 @@ public class AdsServiceImpl implements AdsService {
         logger.info("Processing AdsServiceImpl:getMyAds()");
         List<Ads> myAds = adsRepository.findByUserEmail(userLogin);
         ResponseWrapperAdsDto wrapperAds = new ResponseWrapperAdsDto();
-
-        // if (!myAds.isEmpty()) {
-
         wrapperAds.setCount(myAds.size());
         wrapperAds.setResults(
                 adsDtoMapper.toAdsDtoList(myAds));
-        //  } else {
-        //      wrapperAds.setCount(0);
-        //      wrapperAds.setResults(Collections.emptyList());
-        //   }
 
         return wrapperAds;
     }
-
- /*  @Override
-    public ResponseWrapperAdsDto getMyAds(String userLogin) {
-        logger.info("Processing AdsServiceImpl:getMyAds()");
-        List<Ads> myAds = adsRepository.findByUserEmail(userLogin);
-        ResponseWrapperAdsDto wrapperAds = new ResponseWrapperAdsDto();
-
-        if (!myAds.isEmpty()) {
-         List<Ads> adsSelect = adsRepository.searchByTitle("libreary");
-            wrapperAds.setCount(adsSelect.size());
-            wrapperAds.setResults(
-                    adsDtoMapper.toAdsDtoList(adsSelect));
-        } else {
-            wrapperAds.setCount(0);
-            wrapperAds.setResults(Collections.emptyList());
-        }
-
-        return wrapperAds;
-    }
-
-*/
 
 
     @Override
@@ -118,16 +91,9 @@ public class AdsServiceImpl implements AdsService {
         logger.info("Processing AdsServiceImpl:getAllAds()");
         ResponseWrapperAdsDto wrapperAds = new ResponseWrapperAdsDto();
         List<Ads> adsList = adsRepository.findAll();
-
-        //  if (!adsList.isEmpty()) {
         wrapperAds.setResults(
                 adsDtoMapper.toAdsDtoList(adsList));
         wrapperAds.setCount(adsList.size());
-        /*} else {
-            wrapperAds.setCount(0);
-            wrapperAds.setResults(Collections.emptyList());
-        }*/
-
         return wrapperAds;
     }
 
