@@ -29,15 +29,6 @@ public class WebSecurityConfig {
         return new JdbcUserDetailsManager(dataSource);
     }
 
-   /* @Bean
-    public UserDetailsManager userDetailsService(DataSource dataSource) {
-        return new JdbcUserDetailsManager(dataSource);
-    }*/
- /* @Bean
-  public JdbcUserDetailsManager userDetailsService(DataSource dataSource) {
-JdbcUserDetailsManager manager = new JdbcUserDetailsManager( dataSource);
-      return  manager;
-  }*/
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -54,10 +45,7 @@ JdbcUserDetailsManager manager = new JdbcUserDetailsManager( dataSource);
                 .httpBasic(withDefaults());
         return http.build();
     }
-    /*@Bean
-    public PasswordEncoder passwordEncoder() { //кодировщик
-        return new BCryptPasswordEncoder();
-    }*/
+
 
 }
 

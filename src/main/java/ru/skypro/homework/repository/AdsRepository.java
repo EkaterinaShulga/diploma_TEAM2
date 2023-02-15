@@ -12,13 +12,10 @@ import java.util.Optional;
 @Repository
 public interface AdsRepository extends JpaRepository<Ads, Long> {
 
-    Ads findAdsByPk(Long pk);
+    Ads findAdsById(Long id);
     int countByTitleAndUserId(String title, Long userId);
 
-    Optional<Ads> findByPkAndUserId(Long id, Long userId);
-   Optional<Ads> findByPk(Long id);
-
-    Optional<Ads> findByPkAndUserEmail(long adsId, String userLogin);
+    Optional<Ads> findByIdAndUserId(Long id, Long userId);
 
     @Query("SELECT a FROM Ads a WHERE a.title LIKE %:title%")
     List<Ads> searchByTitle(@Param("title") String title);

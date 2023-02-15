@@ -18,6 +18,6 @@ public class Image {
     private Long id;
 
     @ManyToOne()
-    @JoinColumn(name = "ads_pk")
+    @JoinColumn(name = "ads_id")
     Ads ads;
 }

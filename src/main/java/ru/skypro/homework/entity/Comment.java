@@ -16,15 +16,15 @@ public class Comment {
     private String createdAt;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer pk;
+    private Integer id;
     private String text;
 
     @ManyToOne()
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "ads_pk")
+    @JoinColumn(name = "ads_id")
     private Ads ads;
 
 
@@ -39,11 +39,11 @@ public class Comment {
     }
 
     public Integer getPk() {
-        return pk;
+        return id;
     }
 
-    public void setPk(Integer pk) {
-        this.pk = pk;
+    public void setPk(Integer id) {
+        this.id = id;
     }
 
     public String getText() {
@@ -75,11 +75,11 @@ public class Comment {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Comment comment = (Comment) o;
-        return Objects.equals(createdAt, comment.createdAt) && Objects.equals(pk, comment.pk) && Objects.equals(text, comment.text) && Objects.equals(user, comment.user) && Objects.equals(ads, comment.ads);
+        return Objects.equals(createdAt, comment.createdAt) && Objects.equals(id, comment.id) && Objects.equals(text, comment.text) && Objects.equals(user, comment.user) && Objects.equals(ads, comment.ads);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(createdAt, pk, text, user, ads);
+        return Objects.hash(createdAt, id, text, user, ads);
     }
 }

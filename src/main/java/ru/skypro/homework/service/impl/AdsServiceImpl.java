@@ -46,7 +46,7 @@ public class AdsServiceImpl implements AdsService {
     private final ImageService imageService;
 
     @Override
-    public AdsDto createAds(String userLogin, CreateAdsDto createAdsDto, MultipartFile image) throws IOException {//изменила
+    public AdsDto createAds(String userLogin, CreateAdsDto createAdsDto, MultipartFile image) throws IOException {
         logger.info("Processing AdsServiceImpl:createAds()");
         User user = usersService.getUserByLogin(userLogin);
         int exist = adsRepository.countByTitleAndUserId(createAdsDto.getTitle(), user.getId());
@@ -101,7 +101,7 @@ public class AdsServiceImpl implements AdsService {
     public AdsDto updateAds(String userLogin, long adsId, CreateAdsDto updatedAdsDto) {
         logger.info("Processing AdsServiceImpl:updateAds()");
         User user = usersService.getUserByLogin(userLogin);
-        Optional<Ads> optionalAds = adsRepository.findByPkAndUserId(adsId, user.getId());
+        Optional<Ads> optionalAds = adsRepository.findByIdAndUserId(adsId, user.getId());
 
         optionalAds.ifPresent(adsEntity -> {
             adsEntity.setDescription(updatedAdsDto.getDescription());
@@ -120,7 +120,7 @@ public class AdsServiceImpl implements AdsService {
     @Override
     public void removeAds(long adsId) {
         logger.info("Processing AdsServiceImpl:removeAds()");
-        Ads ads = adsRepository.findAdsByPk(adsId);
+        Ads ads = adsRepository.findAdsById(adsId);
         adsRepository.delete(ads);
 
 

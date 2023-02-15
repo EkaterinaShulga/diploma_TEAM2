@@ -12,7 +12,7 @@ import java.util.List;
 public class Ads {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long pk;
+    private Long id;
     private long price;
     private String title;
     private String description;

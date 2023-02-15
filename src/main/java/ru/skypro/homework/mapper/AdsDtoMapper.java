@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 public interface AdsDtoMapper {
 
    @Mapping(source = "user.id", target = "author")
-    @Mapping(source = "pk", target = "pk")
+    @Mapping(source = "id", target = "pk")
     @Mapping(source = "image", target = "image", qualifiedByName = "getReferencesForImages")
     AdsDto toDto(Ads ads);
 

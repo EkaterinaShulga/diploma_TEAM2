@@ -39,7 +39,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public CommentDto addComment(CommentDto commentDto, Long adsPk) {
         logger.info("method CommentServiceImpl - addComments");
-        Ads ads = adsRepository.findAdsByPk(adsPk);
+        Ads ads = adsRepository.findAdsById(adsPk);
         Comment comment = commentMapper.toComment(commentDto, ads);
         commentRepository.save(comment);
         logger.info("create new comment");
@@ -58,7 +58,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public ResponseWrapperCommentDto getCommentsByAdsPk(Long adsPk) {
         logger.info("method CommentServiceImpl - getCommentsByAdsPk");
-        List<Comment> allComments = commentRepository.getCommentsByAdsPk(adsPk);
+        List<Comment> allComments = commentRepository.getCommentsByAdsId(adsPk);
         logger.info("return all ads by this adPk");
         return commentMapper.toResponseWrapperCommentDto(commentMapper.toListDto(allComments), allComments.size());
 
@@ -75,7 +75,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public CommentDto getComments(Long adsPk, Integer pk) {
         logger.info("method CommentServiceImpl - getComments");
-        Optional<Comment> commentOptional = commentRepository.findCommentByAdsPkAndPk(adsPk, pk);
+        Optional<Comment> commentOptional = commentRepository.findCommentByAdsIdAndId(adsPk, pk);
         return commentOptional
                 .map(commentMapper::toDto)
                 .orElse(null);
@@ -90,7 +90,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public Comment getComment(Long adsPk, Integer pk) {
         logger.info("method CommentServiceImpl - getComment");
-        return commentRepository.findCommentByAdsPkAndPk(adsPk, pk).orElse(null);
+        return commentRepository.findCommentByAdsIdAndId(adsPk, pk).orElse(null);
     }
 
     /**
@@ -105,7 +105,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public CommentDto updateComments(Long adsPk, Integer pk, CommentDto commentUpdateDto) {
         logger.info("method CommentServiceImpl - updateComments");
-        Comment commentUpdate = commentRepository.getCommentByAdsPkAndPk(adsPk, pk);
+        Comment commentUpdate = commentRepository.getCommentByAdsIdAndId(adsPk, pk);
         commentUpdate.setText(commentUpdateDto.getText());
         commentRepository.save(commentUpdate);
         return commentMapper.toDto(commentUpdate);
@@ -123,7 +123,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public void deleteComment(Long adsPk, Integer pk) {
         logger.info("method CommentServiceImpl - deleteComments");
-        Comment comment = commentRepository.getCommentByAdsPkAndPk(adsPk, pk);
+        Comment comment = commentRepository.getCommentByAdsIdAndId(adsPk, pk);
         commentRepository.delete(comment);
 
     }

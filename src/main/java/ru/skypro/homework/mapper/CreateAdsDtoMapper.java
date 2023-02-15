@@ -10,7 +10,7 @@ import ru.skypro.homework.entity.User;
 public interface CreateAdsDtoMapper {
 
 
-    @Mapping(target = "pk", ignore = true)
+    @Mapping(target = "id", ignore = true)
     Ads toModel(CreateAdsDto createAdsDto, User user);
     Ads toModel(CreateAdsDto createAdsDto);
 

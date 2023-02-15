@@ -11,11 +11,11 @@ import java.util.Optional;
 public interface CommentRepository extends JpaRepository<Comment, Integer> {
 
 
-    List<Comment> getCommentsByAdsPk(Long adsPk);
+    List<Comment> getCommentsByAdsId(Long id);
 
-    Comment getCommentByAdsPkAndPk(Long adsPk, Integer pk);
+    Comment getCommentByAdsIdAndId(Long adsPk, Integer pk);
 
-    Optional<Comment> findCommentByAdsPkAndPk(Long adsPk, Integer pk);
+    Optional<Comment> findCommentByAdsIdAndId(Long adsPk, Integer pk);
 
 
 }
