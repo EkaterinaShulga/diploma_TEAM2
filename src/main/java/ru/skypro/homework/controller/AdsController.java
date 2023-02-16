@@ -148,10 +148,10 @@ public class AdsController {
     )
     public ResponseEntity<ResponseWrapperAdsDto> getAdsMe(Authentication authentication) {
         logger.info("Processing getAdsMe Controller");
-        ResponseWrapperAdsDto myAds = adsService.getMyAds(authentication.getName());
+      ResponseWrapperAdsDto myAds = adsService.getMyAds(authentication.getName());
 
 
-        return ResponseEntity.ok(myAds);
+       return ResponseEntity.ok(myAds);
     }
 
     //@PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
@@ -257,9 +257,9 @@ public class AdsController {
 
     @PatchMapping(value = "/{id}/image",  consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<byte[]> updateImage(@PathVariable("id") Long id,
-                                              @RequestBody MultipartFile file) {
+                                              @RequestParam MultipartFile image) {
         logger.info("method AdsController - updateImage");
-        byte[] imageUpdate = imageService.updateImage(id, file);
+        byte[] imageUpdate = imageService.updateImage(id, image);
         return ResponseEntity.ok(imageUpdate);
     }
 

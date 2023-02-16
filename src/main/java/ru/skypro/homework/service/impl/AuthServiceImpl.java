@@ -10,11 +10,12 @@ import ru.skypro.homework.dto.RegisterReq;
 import ru.skypro.homework.dto.Role;
 import ru.skypro.homework.repository.UserRepository;
 import ru.skypro.homework.service.AuthService;
-import ru.skypro.homework.service.UserService;
 
+
+import java.time.LocalDateTime;
 import java.util.Optional;
 
-import java.util.Optional;
+
 
 @Service
 public class AuthServiceImpl implements AuthService {
@@ -54,12 +55,15 @@ public AuthServiceImpl(UserDetailsManager manager,
                         .roles(role.name())
                         .build()
         );
-
+        LocalDateTime time = LocalDateTime.now();
  Optional<ru.skypro.homework.entity.User> user = userRepository.findByEmail(registerReq.getUsername());
         ru.skypro.homework.entity.User user1 = user.get();
         user1.setFirstName(registerReq.getFirstName());
         user1.setLastName(registerReq.getLastName());
         user1.setPhone(registerReq.getPhone());
+        user1.setEmail(registerReq.getUsername());
+        user1.setRegDate(time.toString());
+
         userRepository.save(user1);
 
         return true;

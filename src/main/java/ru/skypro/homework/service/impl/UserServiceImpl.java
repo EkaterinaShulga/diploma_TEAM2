@@ -52,10 +52,7 @@ public class UserServiceImpl implements UserService {
         Optional<User> optionalUser = Optional.of(getUserByLogin(userLogin));
 
         optionalUser.ifPresent(userEntity -> {
-            userEntity.setFirstName(userDto.getFirstName());
-            userEntity.setLastName(userDto.getLastName());
-            userEntity.setPhone(userDto.getPhone());
-
+           userMapper.toEntity(userDto);
             userRepository.save(userEntity);
         });
 

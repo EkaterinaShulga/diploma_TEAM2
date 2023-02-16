@@ -7,7 +7,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import ru.skypro.homework.controller.AdsController;
 import ru.skypro.homework.dto.AdsDto;
 import ru.skypro.homework.dto.CreateAdsDto;
 import ru.skypro.homework.dto.FullAdsDto;
@@ -21,11 +20,10 @@ import ru.skypro.homework.mapper.CreateAdsDtoMapper;
 import ru.skypro.homework.mapper.FullAdsDtoMapper;
 import ru.skypro.homework.repository.AdsRepository;
 import ru.skypro.homework.service.AdsService;
-import ru.skypro.homework.service.CommentService;
 import ru.skypro.homework.service.ImageService;
 
 
-import javax.transaction.Transactional;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
