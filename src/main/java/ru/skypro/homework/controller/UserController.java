@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -71,7 +72,12 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
-    @PatchMapping("me/image")
+    @PatchMapping(value = "/me/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Operation(summary = "updateUserImage",
+            responses = {
+                    @ApiResponse(responseCode = "200", content = @Content),
+                    @ApiResponse(responseCode = "404", content = @Content)
+            })
     public ResponseEntity<String> updateUserImage(@RequestPart MultipartFile image) {
         logger.info("Processing updateUserImage Controller");
         String filePath = "";
