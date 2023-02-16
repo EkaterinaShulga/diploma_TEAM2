@@ -10,9 +10,6 @@ import ru.skypro.homework.dto.RegisterReq;
 import ru.skypro.homework.dto.Role;
 import ru.skypro.homework.repository.UserRepository;
 import ru.skypro.homework.service.AuthService;
-import ru.skypro.homework.service.UserService;
-
-import java.util.Optional;
 
 import java.util.Optional;
 
@@ -60,6 +57,7 @@ public AuthServiceImpl(UserDetailsManager manager,
         user1.setFirstName(registerReq.getFirstName());
         user1.setLastName(registerReq.getLastName());
         user1.setPhone(registerReq.getPhone());
+        user1.setEmail(registerReq.getUsername());
         userRepository.save(user1);
 
         return true;

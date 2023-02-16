@@ -1,13 +1,12 @@
 package ru.skypro.homework.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import ru.skypro.homework.controller.AdsController;
 import ru.skypro.homework.dto.AdsDto;
 import ru.skypro.homework.dto.CreateAdsDto;
 import ru.skypro.homework.dto.FullAdsDto;
@@ -21,12 +20,9 @@ import ru.skypro.homework.mapper.CreateAdsDtoMapper;
 import ru.skypro.homework.mapper.FullAdsDtoMapper;
 import ru.skypro.homework.repository.AdsRepository;
 import ru.skypro.homework.service.AdsService;
-import ru.skypro.homework.service.CommentService;
 import ru.skypro.homework.service.ImageService;
 
 
-import javax.transaction.Transactional;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -45,8 +41,17 @@ public class AdsServiceImpl implements AdsService {
     private final FullAdsDtoMapper fullAdsDtoMapper;
     private final ImageService imageService;
 
+
+    /**
+     * Creating of new ad
+     *
+     * @param userLogin    - username
+     * @param createAdsDto - created ad
+     * @param image        - image path
+     * @return ad created
+     */
     @Override
-    public AdsDto createAds(String userLogin, CreateAdsDto createAdsDto, MultipartFile image) throws IOException {
+    public AdsDto createAds(String userLogin, CreateAdsDto createAdsDto, MultipartFile image) {
         logger.info("Processing AdsServiceImpl:createAds()");
         User user = usersService.getUserByLogin(userLogin);
         int exist = adsRepository.countByTitleAndUserId(createAdsDto.getTitle(), user.getId());
@@ -65,7 +70,14 @@ public class AdsServiceImpl implements AdsService {
         return adsDtoMapper.toDto(entityAds);
     }
 
-
+    /**
+     * Receive ad by id
+     * The repository method is being used {@link AdsRepository#findById(Object)}
+     *
+     * @param id - ad id
+     * @return ad entity
+     * @throws AdsNotFoundException if no ad was found
+     */
     @Override
     public Ads getAdsByPk(long id) {
         logger.info("Processing AdsServiceImpl:getAdsByPk()");
@@ -73,6 +85,12 @@ public class AdsServiceImpl implements AdsService {
                 .orElseThrow(() -> new AdsNotFoundException("Объявление с id " + id + " не найдено!"));
     }
 
+    /**
+     * Receive all ads for user
+     *
+     * @param userLogin - username
+     * @return ad list
+     */
     @Override
     public ResponseWrapperAdsDto getMyAds(String userLogin) {
         logger.info("Processing AdsServiceImpl:getMyAds()");
@@ -85,7 +103,13 @@ public class AdsServiceImpl implements AdsService {
         return wrapperAds;
     }
 
-
+    /**
+     * Receive all Ads
+     * The Service method is being used{@link AdsService#getAllAds()}
+     * wherein the repository method is used to get all declarations{@link AdsRepository#findAll()}
+     *
+     * @return ad list
+     */
     @Override
     public ResponseWrapperAdsDto getAllAds() {
         logger.info("Processing AdsServiceImpl:getAllAds()");
@@ -97,10 +121,19 @@ public class AdsServiceImpl implements AdsService {
         return wrapperAds;
     }
 
+    /**
+     * Receive old ad by id, update and save
+     *
+     * @param userLogin     - username which should be updated
+     * @param adsId - Ad id
+     * @param updatedAdsDto - new ad
+     * @return ad update
+     */
     @Override
-    public AdsDto updateAds(String userLogin, long adsId, CreateAdsDto updatedAdsDto) {
+    public AdsDto updateAds(String userLogin, long adsId, CreateAdsDto updatedAdsDto, Authentication authentication) {
         logger.info("Processing AdsServiceImpl:updateAds()");
         User user = usersService.getUserByLogin(userLogin);
+        usersService.checkUserPermission(authentication, user.getUsername());
         Optional<Ads> optionalAds = adsRepository.findByIdAndUserId(adsId, user.getId());
 
         optionalAds.ifPresent(adsEntity -> {
@@ -116,16 +149,26 @@ public class AdsServiceImpl implements AdsService {
                 .orElse(null);
     }
 
-
+    /**
+     * Delete ad from DB by id
+     * The repository method is being used {@link AdsRepository#delete(Object)}
+     *
+     * @param adsId - ad id
+     */
     @Override
-    public void removeAds(long adsId) {
+    public void removeAds(long adsId, Authentication authentication) {
         logger.info("Processing AdsServiceImpl:removeAds()");
         Ads ads = adsRepository.findAdsById(adsId);
+        usersService.checkUserPermission(authentication, ads.getUser().getUsername());
         adsRepository.delete(ads);
-
-
     }
 
+    /**
+     * Search for a full ad in DB by ID
+     *
+     * @param adsId - ad id
+     * @return present ad
+     */
     @Override
     public FullAdsDto getAds(long adsId) {
         logger.info("Processing AdsServiceImpl:getAds()");
@@ -137,35 +180,15 @@ public class AdsServiceImpl implements AdsService {
                 .orElse(null);
     }
 
+    /**
+     * Search for add in DB by part of title
+     *
+     * @param title - part of title
+     * @return present ad
+     */
     @Override
     public List<Ads> getAdsLike(String title) {
         return adsRepository.searchByTitle(title);
     }
-
-    /*public boolean updateAdsImagePath(Long adsId, String userLogin, String filePath) {
-        logger.info("Processing AdsServiceImpl:updateAdsImagePath()");
-        Optional<Ads> optionalAds = adsRepository.findByPkAndUserEmail(adsId, userLogin);
-
-        Ads adsEntity = optionalAds.orElseThrow(EntityNotFoundException::new);
-        byte[]oldImage = adsEntity.getImage();//изменила
-
-        try {
-           // if (!oldImage.isEmpty()) {
-            if(oldImage == null)
-                fileService.removeFileByPath(oldImage);
-            }
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-        adsEntity.setImage(filePath);
-
-        try {
-            adsRepository.save(adsEntity);
-        } catch (AdsNotFoundException e) {
-            logger.error("Error: " + e.getMessage());
-        }
-        return true;
-    }*/
-
 
 }

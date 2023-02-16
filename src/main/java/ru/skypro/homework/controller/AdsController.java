@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -43,7 +44,7 @@ import org.springframework.http.HttpStatus;
 )
 
 public class AdsController {
-    private Logger logger = LoggerFactory.getLogger(AdsController.class);
+    private final Logger logger = LoggerFactory.getLogger(AdsController.class);
 
     private static final String IMAGE_PATH = "/ads";
 
@@ -53,6 +54,7 @@ public class AdsController {
 
 
     //@PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
+
     @GetMapping(value = "/{id}")
     @Operation(
             summary = "getFullAds",
@@ -61,6 +63,7 @@ public class AdsController {
                     @ApiResponse(responseCode = "404", content = @Content())
             }
     )
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<FullAdsDto> getFullAd(@PathVariable("id") long adsId) {
         logger.info("Precessing getAds Controller");
         FullAdsDto fullAdsDto = adsService.getAds(adsId);
@@ -72,6 +75,7 @@ public class AdsController {
     }
 
     // @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
+
     @DeleteMapping(value = "/{id}")
     @Operation(
             summary = "removeAds",
@@ -79,18 +83,19 @@ public class AdsController {
                     @ApiResponse(responseCode = "204", content = @Content())
             }
     )
-
-    public ResponseEntity<HttpStatus> removeAds(@PathVariable("id") long adsId) {
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<HttpStatus> removeAds(@PathVariable("id") long adsId, Authentication authentication) {
         logger.info("Processing removeAds Controller");
         Ads adsForDelete = adsService.getAdsByPk(adsId);
         if (adsForDelete == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-        adsService.removeAds(adsId);
+        adsService.removeAds(adsId, authentication);
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
     //  @PreAuthorize("hasRole('ROLE_ADMIN')")
+
     @PatchMapping(value = "/{id}")
     @Operation(
             summary = "updateAds",
@@ -101,11 +106,12 @@ public class AdsController {
                     @ApiResponse(responseCode = "404", content = @Content())
             }
     )
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<AdsDto> updateAds(@PathVariable("id") long adsId,
-                            @RequestBody CreateAdsDto updatedAdsDto,
-                            Authentication authentication) { // удалить
+                                            @RequestBody CreateAdsDto updatedAdsDto,
+                                            Authentication authentication) { // удалить
         logger.info("Processing updateAds Controller");
-        AdsDto newAdsDto = adsService.updateAds(authentication.getName(), adsId, updatedAdsDto);
+        AdsDto newAdsDto = adsService.updateAds(authentication.getName(), adsId, updatedAdsDto, authentication);
         if (newAdsDto == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
@@ -114,6 +120,7 @@ public class AdsController {
     }
 
     //  @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
+
     @PostMapping(
             consumes = {MediaType.MULTIPART_FORM_DATA_VALUE},
             produces = MediaType.APPLICATION_JSON_VALUE
@@ -125,6 +132,7 @@ public class AdsController {
                     @ApiResponse(responseCode = "201", content = @Content())
             }
     )
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<AdsDto> addAds(@RequestPart(value = "properties") CreateAdsDto createAdsDto,//изменила
                                          @RequestPart(value = "image") MultipartFile image,
                                          Authentication authentication) throws IOException {
@@ -146,6 +154,7 @@ public class AdsController {
                     @ApiResponse(responseCode = "404", content = @Content())
             }
     )
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ResponseWrapperAdsDto> getAdsMe(Authentication authentication) {
         logger.info("Processing getAdsMe Controller");
         ResponseWrapperAdsDto myAds = adsService.getMyAds(authentication.getName());
@@ -155,6 +164,7 @@ public class AdsController {
     }
 
     //@PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
+
     @PostMapping("/{ad_pk}/comments")
     @Operation(
             summary = "addComments",
@@ -163,10 +173,11 @@ public class AdsController {
                     @ApiResponse(responseCode = "404", content = @Content())
             }
     )
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<CommentDto> addComments(@RequestBody CommentDto commentDto,
                                                   @PathVariable("ad_pk") Long adPk) {
         logger.info("method AdsController - addComments");
-            return ResponseEntity.ok(commentService.addComment(commentDto, adPk));
+        return ResponseEntity.ok(commentService.addComment(commentDto, adPk));
     }
 
     @Operation(
@@ -177,16 +188,17 @@ public class AdsController {
             }
     )
     //   @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("isAuthenticated()")
     @DeleteMapping("/{ad_pk}/comments/{id}")
     public ResponseEntity<HttpStatus> deleteComments(@PathVariable("ad_pk") Long adPk,
-                                                 @PathVariable("id") Integer commentPk) {
+                                                     @PathVariable("id") Integer commentPk, Authentication authentication) {
         logger.info("method AdsController - deleteComments");
-         Comment  comment = commentService.getComment(adPk, commentPk);
-        if(comment == null){
-           return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        Comment comment = commentService.getComment(adPk, commentPk);
+        if (comment == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-            commentService.deleteComment(adPk, commentPk);
-            return ResponseEntity.status(HttpStatus.OK).build();
+        commentService.deleteComment(adPk, commentPk, authentication);
+        return ResponseEntity.status(HttpStatus.OK).build();
 
     }
 
@@ -206,7 +218,7 @@ public class AdsController {
     }
 
     // @PreAuthorize("hasRole('ROLE_ADMIN')")
-    // @PreAuthorize("isAuthenticated()")
+
     @GetMapping("/{ad_pk}/comments/{id}")
     @Operation(
             summary = "getComments",
@@ -215,6 +227,7 @@ public class AdsController {
                     @ApiResponse(responseCode = "404", content = @Content())
             }
     )
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<CommentDto> getComments(@PathVariable("ad_pk") Long adPk,
                                                   @PathVariable("id") Integer commentPk) {
         logger.info("method AdsController - getComments");
@@ -228,18 +241,19 @@ public class AdsController {
     }
 
     //   @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("isAuthenticated()")
     @PatchMapping(value = "/{ad_pk}/comments/{id}")
     // @PreAuthorize("isAuthenticated()")
     public ResponseEntity<CommentDto> updateComments(@PathVariable("ad_pk") Long adPk,
                                                      @PathVariable("id") Integer commentPk,
-                                                     @RequestBody CommentDto commentUpdate) {
+                                                     @RequestBody CommentDto commentUpdate, Authentication authentication) {
         logger.info("method AdsController - updateComments");
         Comment comment = commentService.getComment(adPk, commentPk);
         if (comment == null) {
             logger.info("Not found comments by this " + adPk + " and " + commentPk);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         } else {
-            CommentDto commentDto = commentService.updateComments(adPk, commentPk, commentUpdate);
+            CommentDto commentDto = commentService.updateComments(adPk, commentPk, commentUpdate, authentication);
             return ResponseEntity.ok(commentDto);
         }
     }
@@ -255,7 +269,8 @@ public class AdsController {
         return ResponseEntity.ok(allAds);
     }
 
-    @PatchMapping(value = "/{id}/image",  consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PatchMapping(value = "/{id}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<byte[]> updateImage(@PathVariable("id") Long id,
                                               @RequestBody MultipartFile file) {
         logger.info("method AdsController - updateImage");
