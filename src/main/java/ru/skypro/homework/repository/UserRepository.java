@@ -5,14 +5,11 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import ru.skypro.homework.entity.User;
 
-import java.util.Collection;
 import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    @Query(value = "SELECT * FROM users", nativeQuery = true)
-    Collection<User> getAll();
 
     @Query(value = "SELECT * FROM users WHERE password = :password", nativeQuery = true)
     User getUserByPassword(String password);

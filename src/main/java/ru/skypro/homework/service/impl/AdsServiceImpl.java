@@ -22,7 +22,6 @@ import ru.skypro.homework.repository.AdsRepository;
 import ru.skypro.homework.service.AdsService;
 import ru.skypro.homework.service.ImageService;
 
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -130,10 +129,11 @@ public class AdsServiceImpl implements AdsService {
      * @return ad update
      */
     @Override
-    public AdsDto updateAds(String userLogin, long adsId, CreateAdsDto updatedAdsDto) {
+    public AdsDto updateAds(String userLogin, long adsId, CreateAdsDto updatedAdsDto, Authentication authentication) {
         logger.info("Processing AdsServiceImpl:updateAds()");
-        User user = usersService.getUserByLogin(userLogin);
-        Optional<Ads> optionalAds = adsRepository.findByIdAndUserId(adsId, user.getId());
+        Ads ads = adsRepository.getReferenceById(adsId);
+        usersService.checkUserPermission(authentication, ads.getUser().getUsername());
+        Optional<Ads> optionalAds = adsRepository.findByIdAndUserId(adsId, ads.getUser().getId());
 
         optionalAds.ifPresent(adsEntity -> {
             adsEntity.setDescription(updatedAdsDto.getDescription());
@@ -155,9 +155,10 @@ public class AdsServiceImpl implements AdsService {
      * @param adsId - ad id
      */
     @Override
-    public void removeAds(long adsId) {
+    public void removeAds(long adsId, Authentication authentication) {
         logger.info("Processing AdsServiceImpl:removeAds()");
         Ads ads = adsRepository.findAdsById(adsId);
+        usersService.checkUserPermission(authentication, ads.getUser().getUsername());
         adsRepository.delete(ads);
     }
 

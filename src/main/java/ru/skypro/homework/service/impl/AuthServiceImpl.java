@@ -11,7 +11,6 @@ import ru.skypro.homework.dto.Role;
 import ru.skypro.homework.repository.UserRepository;
 import ru.skypro.homework.service.AuthService;
 
-
 import java.time.LocalDateTime;
 import java.util.Optional;
 

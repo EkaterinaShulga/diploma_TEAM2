@@ -5,16 +5,14 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.http.ResponseEntity;
 import ru.skypro.homework.dto.PasswordDto;
 import ru.skypro.homework.dto.UserDto;
 import ru.skypro.homework.service.UserService;
-
-import java.util.Collection;
 
 @RestController
 @CrossOrigin(value = "http://localhost:3000")
@@ -50,9 +48,9 @@ public class UserController {
 
     @GetMapping("/me")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<Collection<UserDto>> getUsers() {
-        logger.info("Processing getUsers Controller");
-        return ResponseEntity.ok(userService.getAll());
+    public ResponseEntity<UserDto> getUser(Authentication authentication) {
+        logger.info("Processing getUser Controller");
+        return ResponseEntity.ok(userService.getUser(authentication.getName()));
     }
 
     @PostMapping("/set_password")
@@ -73,7 +71,7 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
-    @PostMapping("me/image")
+    @PatchMapping("me/image")
     public ResponseEntity<String> updateUserImage(@RequestPart MultipartFile image) {
         logger.info("Processing updateUserImage Controller");
         String filePath = "";

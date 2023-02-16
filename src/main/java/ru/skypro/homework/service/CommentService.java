@@ -12,7 +12,7 @@ public interface CommentService {
     void deleteComment(Long adsPk, Integer pk, Authentication authentication);
     CommentDto getComments(Long adsPk, Integer pk);
 
-    Comment getComment(Long adsPk, Integer pk); //возвращает entity для getComment - в контроллере удаляем entity
+    Comment getComment(Long adsPk, Integer pk);
 
     ResponseWrapperCommentDto getCommentsByAdsPk(Long adsPk);
 

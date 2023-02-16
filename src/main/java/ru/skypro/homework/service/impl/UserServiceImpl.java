@@ -14,7 +14,6 @@ import ru.skypro.homework.mapper.UserMapper;
 import ru.skypro.homework.repository.UserRepository;
 import ru.skypro.homework.service.UserService;
 
-import java.util.Collection;
 import java.util.Optional;
 
 @Service
@@ -69,9 +68,9 @@ public class UserServiceImpl implements UserService {
      *
      * @return Collection of User
      */
-    public Collection<UserDto> getAll() {
-        logger.info("Was invoked method for get all users");
-        return userMapper.toDtoCollection(userRepository.getAll());
+    public UserDto getUser(String userLogin) {
+        logger.info("Was invoked method for get current user");
+        return userMapper.toDto(getUserByLogin(userLogin));
     }
 
     /**

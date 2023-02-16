@@ -1,12 +1,13 @@
 package ru.skypro.homework.mapper;
 
-import org.mapstruct.*;
-
+import org.mapstruct.AfterMapping;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 import ru.skypro.homework.dto.CommentDto;
 import ru.skypro.homework.dto.ResponseWrapperCommentDto;
 import ru.skypro.homework.entity.Ads;
 import ru.skypro.homework.entity.Comment;
-
 
 import java.util.List;
 
@@ -20,7 +21,6 @@ import java.util.List;
 @Mapper(componentModel = "spring", uses = {AdsDtoMapper.class})
 public interface CommentMapper {
 
-  //  @Mapping(source = "user.id", target = "id")
     CommentDto toDto(Comment comment);
 
     List<CommentDto> toListDto(List<Comment> comments);

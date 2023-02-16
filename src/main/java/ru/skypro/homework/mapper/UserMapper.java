@@ -7,8 +7,6 @@ import org.mapstruct.MappingConstants;
 import ru.skypro.homework.dto.UserDto;
 import ru.skypro.homework.entity.User;
 
-import java.util.Collection;
-
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING, injectionStrategy = InjectionStrategy.CONSTRUCTOR)
 public interface UserMapper {
 
@@ -19,6 +17,5 @@ public interface UserMapper {
     @Mapping(target = "role", ignore = true)
     User toEntity(UserDto dto);
 
-    Collection<UserDto> toDtoCollection(Collection<User> entity);
 
 }
