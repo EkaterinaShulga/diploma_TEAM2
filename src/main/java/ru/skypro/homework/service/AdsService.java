@@ -1,5 +1,6 @@
 package ru.skypro.homework.service;
 
+import org.springframework.security.core.Authentication;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.AdsDto;
 import ru.skypro.homework.dto.CreateAdsDto;
@@ -22,10 +23,9 @@ public interface AdsService {
 
     ResponseWrapperAdsDto getAllAds();
 
-    AdsDto updateAds(String userLogin, long adsId, CreateAdsDto updatedAdsDto);
+    AdsDto updateAds(String userLogin, long adsId, CreateAdsDto updatedAdsDto, Authentication authentication);
 
-  //  boolean removeAds(long adsId, String userLogin);
-    void removeAds(long adsId);
+    void removeAds(long adsId, Authentication authentication);
     FullAdsDto getAds(long adsId);
 
     List<Ads> getAdsLike(String title);

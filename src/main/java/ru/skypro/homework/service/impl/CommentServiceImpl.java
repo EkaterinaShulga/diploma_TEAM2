@@ -3,6 +3,7 @@ package ru.skypro.homework.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import ru.skypro.homework.dto.CommentDto;
 import ru.skypro.homework.dto.ResponseWrapperCommentDto;
@@ -24,6 +25,7 @@ public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
     private final AdsRepository adsRepository;
     private final CommentMapper commentMapper;
+    private final UserServiceImpl userService;
 
 
     /**
@@ -103,9 +105,10 @@ public class CommentServiceImpl implements CommentService {
      * @see CommentMapper
      */
     @Override
-    public CommentDto updateComments(Long adsPk, Integer pk, CommentDto commentUpdateDto) {
+    public CommentDto updateComments(Long adsPk, Integer pk, CommentDto commentUpdateDto, Authentication authentication) {
         logger.info("method CommentServiceImpl - updateComments");
         Comment commentUpdate = commentRepository.getCommentByAdsIdAndId(adsPk, pk);
+        userService.checkUserPermission(authentication, commentUpdate.getUser().getUsername());
         commentUpdate.setText(commentUpdateDto.getText());
         commentRepository.save(commentUpdate);
         return commentMapper.toDto(commentUpdate);
@@ -121,11 +124,11 @@ public class CommentServiceImpl implements CommentService {
      * @see Comment
      */
     @Override
-    public void deleteComment(Long adsPk, Integer pk) {
+    public void deleteComment(Long adsPk, Integer pk, Authentication authentication) {
         logger.info("method CommentServiceImpl - deleteComments");
         Comment comment = commentRepository.getCommentByAdsIdAndId(adsPk, pk);
+        userService.checkUserPermission(authentication, comment.getUser().getUsername());
         commentRepository.delete(comment);
-
     }
 
 }

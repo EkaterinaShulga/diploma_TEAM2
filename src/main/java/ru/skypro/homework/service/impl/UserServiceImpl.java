@@ -2,11 +2,14 @@ package ru.skypro.homework.service.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import ru.skypro.homework.dto.PasswordDto;
+import ru.skypro.homework.dto.Role;
 import ru.skypro.homework.dto.UserDto;
 import ru.skypro.homework.entity.User;
 import ru.skypro.homework.exception.UserAlreadyCreatedException;
+import ru.skypro.homework.exception.UserHasNoRightsException;
 import ru.skypro.homework.mapper.UserMapper;
 import ru.skypro.homework.repository.UserRepository;
 import ru.skypro.homework.service.UserService;
@@ -42,7 +45,7 @@ public class UserServiceImpl implements UserService {
     /**
      * Edit user
      *
-     * @param userDto data of user
+     * @param userDto   data of user
      * @param userLogin login of user
      * @return updated user
      */
@@ -78,12 +81,12 @@ public class UserServiceImpl implements UserService {
      * Changing password by user
      *
      * @param passwordDto dto for password
-     * @param userLogin username of user
+     * @param userLogin   username of user
      * @return updated password
      */
     public UserDto changePassword(PasswordDto passwordDto, String userLogin) {
         logger.info("Was invoked method for change password of user");
-        if (passwordDto != null){
+        if (passwordDto != null) {
             User user = userRepository.getUserByPassword(passwordDto.getCurrentPassword());
             if (user != null) {
                 user.setPassword(passwordDto.getNewPassword());
@@ -104,4 +107,19 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByEmail(userLogin)
                 .orElseThrow(UserAlreadyCreatedException::new);
     }
+
+    @Override
+    public boolean checkUserPermission(Authentication authentication, String username) {
+        boolean matchUser = authentication.getName().equals(username);
+        boolean userIsAdmin = authentication.getAuthorities().stream()
+                .anyMatch(auth -> auth.getAuthority().contains(Role.ADMIN.name()));
+
+        if (!(userIsAdmin || matchUser)) {
+            logger.warn("Current user has NO rights to perform this operation.");
+            throw new UserHasNoRightsException("Current user has NO rights to perform this operation.");
+        }
+        return true;
+    }
+
+
 }
