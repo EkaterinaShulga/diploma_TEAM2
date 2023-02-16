@@ -90,7 +90,7 @@ public class AdsController {
         if (adsForDelete == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-        adsService.removeAds(adsId, authentication);
+        adsService.removeAds(adsId);
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
@@ -111,7 +111,7 @@ public class AdsController {
                                             @RequestBody CreateAdsDto updatedAdsDto,
                                             Authentication authentication) { // удалить
         logger.info("Processing updateAds Controller");
-        AdsDto newAdsDto = adsService.updateAds(authentication.getName(), adsId, updatedAdsDto, authentication);
+        AdsDto newAdsDto = adsService.updateAds(authentication.getName(), adsId, updatedAdsDto);
         if (newAdsDto == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }

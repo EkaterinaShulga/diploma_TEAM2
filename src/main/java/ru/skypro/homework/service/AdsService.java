@@ -23,9 +23,9 @@ public interface AdsService {
 
     ResponseWrapperAdsDto getAllAds();
 
-    AdsDto updateAds(String userLogin, long adsId, CreateAdsDto updatedAdsDto, Authentication authentication);
+    AdsDto updateAds(String userLogin, long adsId, CreateAdsDto updatedAdsDto);
 
-    void removeAds(long adsId, Authentication authentication);
+    void removeAds(long adsId);
     FullAdsDto getAds(long adsId);
 
     List<Ads> getAdsLike(String title);
