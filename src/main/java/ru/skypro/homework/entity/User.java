@@ -4,6 +4,7 @@ import lombok.Data;
 import ru.skypro.homework.dto.Role;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 @Data
@@ -27,6 +28,7 @@ public class User {
     private List<Ads> allAds;
     public User() {
     }
+
 
     public User(Long id, String firstName, String lastName, String phone, String email, String regDate, String city,  String password, Role role, String username) {
         this.id = id;

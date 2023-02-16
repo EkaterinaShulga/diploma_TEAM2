@@ -130,10 +130,9 @@ public class AdsServiceImpl implements AdsService {
      * @return ad update
      */
     @Override
-    public AdsDto updateAds(String userLogin, long adsId, CreateAdsDto updatedAdsDto, Authentication authentication) {
+    public AdsDto updateAds(String userLogin, long adsId, CreateAdsDto updatedAdsDto) {
         logger.info("Processing AdsServiceImpl:updateAds()");
         User user = usersService.getUserByLogin(userLogin);
-        usersService.checkUserPermission(authentication, user.getUsername());
         Optional<Ads> optionalAds = adsRepository.findByIdAndUserId(adsId, user.getId());
 
         optionalAds.ifPresent(adsEntity -> {
@@ -156,10 +155,9 @@ public class AdsServiceImpl implements AdsService {
      * @param adsId - ad id
      */
     @Override
-    public void removeAds(long adsId, Authentication authentication) {
+    public void removeAds(long adsId) {
         logger.info("Processing AdsServiceImpl:removeAds()");
         Ads ads = adsRepository.findAdsById(adsId);
-        usersService.checkUserPermission(authentication, ads.getUser().getUsername());
         adsRepository.delete(ads);
     }
 

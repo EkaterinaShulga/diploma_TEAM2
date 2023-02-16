@@ -10,7 +10,7 @@ CREATE TABLE Users
     last_name  TEXT,
     phone      TEXT,
     reg_date   TEXT,
-    username   varchar,
+    username   TEXT,
     role       integer,
     city       TEXT
 
