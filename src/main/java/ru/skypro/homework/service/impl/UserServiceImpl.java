@@ -98,6 +98,7 @@ public class UserServiceImpl implements UserService {
      * @param userLogin username of user
      * @return user
      */
+    @Override
     public User getUserByLogin(String userLogin) {
 
         return userRepository.findByEmail(userLogin)
@@ -105,7 +106,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean checkUserPermission(Authentication authentication, String username) {
+    public void checkUserPermission(Authentication authentication, String username) {
         boolean matchUser = authentication.getName().equals(username);
         boolean userIsAdmin = authentication.getAuthorities().stream()
                 .anyMatch(auth -> auth.getAuthority().contains(Role.ADMIN.name()));
@@ -114,7 +115,7 @@ public class UserServiceImpl implements UserService {
             logger.warn("Current user has NO rights to perform this operation.");
             throw new UserHasNoRightsException("Current user has NO rights to perform this operation.");
         }
-        return true;
+
     }
 
 

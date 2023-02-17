@@ -16,16 +16,18 @@ import ru.skypro.homework.dto.ResponseWrapperAdsDto;
 import ru.skypro.homework.entity.Ads;
 import ru.skypro.homework.entity.Image;
 import ru.skypro.homework.entity.User;
-import ru.skypro.homework.mapper.*;
+import ru.skypro.homework.mapper.AdsDtoMapper;
+import ru.skypro.homework.mapper.AdsDtoMapperImpl;
+import ru.skypro.homework.mapper.CreateAdsDtoMapper;
+import ru.skypro.homework.mapper.CreateAdsDtoMapperImpl;
 import ru.skypro.homework.repository.AdsRepository;
 import ru.skypro.homework.service.impl.AdsServiceImpl;
 
-
-import javax.swing.text.html.Option;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
@@ -36,6 +38,7 @@ public class AdsServiceImplTest {
     @Mock
     private AdsRepository adsRepository;
 
+
     @Mock
     private ImageService imageService;
 
@@ -43,13 +46,10 @@ public class AdsServiceImplTest {
     private UserService userService;
 
     @Spy
-    private AdsDtoMapper adsDtoMapper = new AdsDtoMapperImpl();
-
-    @Spy
-    private FullAdsDtoMapper fullAdsDtoMapper = new FullAdsDtoMapperImpl();
-
-    @Spy
     private CreateAdsDtoMapper createAdsDtoMapper = new CreateAdsDtoMapperImpl();
+
+    @Spy
+    private AdsDtoMapper adsDtoMapper = new AdsDtoMapperImpl();
 
     @InjectMocks
     private AdsServiceImpl adsService;
@@ -85,9 +85,6 @@ public class AdsServiceImplTest {
         ads2.setUser(defaultUser);
         adsList = new ArrayList<>();
 
-
-//        adsList = List.of(ads, ads2);
-
         adsList.add(ads);
         adsList.add(ads2);
 
@@ -97,20 +94,21 @@ public class AdsServiceImplTest {
         createAdsDto.setPrice(10000);
     }
 
+
     @Test
     void createAdsTest() {
         Ads adsMock = createAdsDtoMapper.toModel(createAdsDto);
-//        when(userService.getUser(anyString())).thenReturn(defaultUser.getUsername());
+        when(adsRepository.countByTitleAndUserId(anyString(), anyLong())).thenReturn(0);
+        when(adsRepository.save(any())).thenReturn(adsMock);
         when(imageService.createImage(any(), any())).thenReturn(image);
-        when(adsRepository.save(any(Ads.class))).thenReturn(adsMock);
-
+        when(userService.getUserByLogin(anyString())).thenReturn(defaultUser);
         AdsDto result = adsService.createAds(defaultUser.getUsername(), createAdsDto, null);
         assertNotNull(result);
     }
 
     @Test
     void getAdsByPk() {
-        when(adsRepository.findAdsById(anyLong())).thenReturn(ads);
+        when(adsRepository.findById(anyLong())).thenReturn(Optional.of(ads));
         Ads result = adsService.getAdsByPk(ads.getId());
 
         assertNotNull(result);
@@ -136,21 +134,44 @@ public class AdsServiceImplTest {
     @Test
     void updateAdsTest() {
         Ads adsMock = createAdsDtoMapper.toModel(createAdsDto);
-        when(adsRepository.findByIdAndUserId(anyLong(), anyLong())).thenReturn(Optional.of(ads));
+        when(adsRepository.getReferenceById(anyLong())).thenReturn(ads2);
+        doNothing().when(userService).checkUserPermission(authentication, defaultUser.getUsername());
         when(adsRepository.save(any())).thenReturn(adsMock);
 
-        AdsDto result = adsService.updateAds(defaultUser.getUsername(), ads.getUser().getId(), createAdsDto, authentication);
+        AdsDto result = adsService.updateAds(defaultUser.getUsername(), ads2.getId(), createAdsDto, authentication);
+
+        verify(adsRepository, atMostOnce()).save(ads2);
+        verify(adsDtoMapper, atMostOnce()).toDto(ads2);
 
         assertNotNull(result);
+        assertEquals(result.getPrice(),createAdsDto.getPrice());
     }
 
     @Test
     void removeAdsTest() {
         when(adsRepository.findAdsById(anyLong())).thenReturn(ads);
-
+        doNothing().when(userService).checkUserPermission(authentication, ads.getUser().getUsername());
         adsService.removeAds(ads.getId(), authentication);
 
         verify(adsRepository, atMostOnce()).delete(ads);
+
+
+    }
+
+    @Test
+    void getAdsTest() {
+        when(adsRepository.findById(anyLong())).thenReturn(Optional.of(ads2));
+        FullAdsDto result = adsService.getAds(ads2.getId());
+
+        assertNotNull(result);
+    }
+
+    @Test
+    void getAdsLikeTest() {
+        when(adsRepository.searchByTitle(anyString())).thenReturn(adsList);
+        List<Ads> result = adsService.getAdsLike(ads.getTitle());
+
+        assertNotNull(result);
     }
 
 

@@ -107,14 +107,11 @@ public class UserServiceImplTest {
                 .isThrownBy(() -> userService.checkUserPermission(authentication, defaultUser.getUsername()));
     }
 
-//    @Test
-//    void changePasswordWrongTest() {
-//        PasswordDto passwordDto = new PasswordDto();
-//        when(userRepository.getUserByPassword(anyString())).thenReturn(defaultUser);
-//
-//        UserDto result = userService.changePassword(passwordDto, defaultUser.getUsername());
-//
-//        assertNotNull(result);
-//
-//    }
+    @Test
+    void changePasswordWrongTest() {
+        UserDto result = userService.changePassword(null, defaultUser.getUsername());
+
+        assertNull(result);
+
+    }
 }
