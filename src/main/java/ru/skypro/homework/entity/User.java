@@ -4,7 +4,6 @@ import lombok.Data;
 import ru.skypro.homework.dto.Role;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 @Data
@@ -26,10 +25,11 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     private List<Ads> allAds;
+
+    @OneToOne(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private Avatar avatar;
     public User() {
     }
-
-
     public User(Long id, String firstName, String lastName, String phone, String email, String regDate, String city,  String password, Role role, String username) {
         this.id = id;
         this.firstName = firstName;
@@ -164,4 +164,6 @@ public class User {
                 ", city='" + city + '\'' +
                 '}';
     }
+
+
 }

@@ -13,6 +13,7 @@ import ru.skypro.homework.mapper.CommentMapper;
 import ru.skypro.homework.repository.AdsRepository;
 import ru.skypro.homework.repository.CommentRepository;
 import ru.skypro.homework.service.CommentService;
+import ru.skypro.homework.service.UserService;
 
 import java.util.List;
 import java.util.Optional;
@@ -29,19 +30,17 @@ public class CommentServiceImpl implements CommentService {
 
 
     /**
-     * {@link AdsRepository #findAdsByPk(Long)} возвращает {@code Ads} из БД .<br>
-     * {@link CommentMapper #toComment(Object)}, преобразует {@code CommentDto(DTO)} в {@code Comment(Entity)}. <br>
-     * {@link CommentRepository#save(Object)}сохраняет в БД {@code Comment}. <br>
-     * {@link CommentMapper #toDto(Object)} преобразует  {@code Comment} в  {@code CommentDto} <br>
+     * creating new comment for ad <br>
+     * saves the  {@code Comment} to the database  <br>
      *
-     * @see CommentDto
-     * @see Comment
-     * @see CommentMapper
+     * @param commentDto - created comment
+     * @param adPk       - id ad
+     * @return commentDto
      */
     @Override
-    public CommentDto addComment(CommentDto commentDto, Long adsPk) {
+    public CommentDto addComment(CommentDto commentDto, Long adPk) {
         logger.info("method CommentServiceImpl - addComments");
-        Ads ads = adsRepository.findAdsById(adsPk);
+        Ads ads = adsRepository.findAdsById(adPk);
         Comment comment = commentMapper.toComment(commentDto, ads);
         commentRepository.save(comment);
         logger.info("create new comment");
@@ -50,34 +49,32 @@ public class CommentServiceImpl implements CommentService {
 
 
     /**
-     * {@link CommentRepository #getCommentsByAdsPk(Long)} возвращает все {@code Comments} из БД <br>
-     * в {@code List<Comment>}<br>
-     * {@link CommentMapper #toListDto(Object)} преобразует {@code List<Comment>} в {@code List<CommentDto>}<br>
+     * gets comments by id ad <br>
+     * gets a comments from the database and converts it to ResponseWrapperCommentDto <br>
      *
-     * @see ResponseWrapperCommentDto
-     * @see CommentMapper
+     * @param adPk - id ad
+     * @return ResponseWrapperCommentDto
      */
     @Override
-    public ResponseWrapperCommentDto getCommentsByAdsPk(Long adsPk) {
+    public ResponseWrapperCommentDto getCommentsByAdsPk(Long adPk) {
         logger.info("method CommentServiceImpl - getCommentsByAdsPk");
-        List<Comment> allComments = commentRepository.getCommentsByAdsId(adsPk);
+        List<Comment> allComments = commentRepository.getCommentsByAdsId(adPk);
         logger.info("return all ads by this adPk");
         return commentMapper.toResponseWrapperCommentDto(commentMapper.toListDto(allComments), allComments.size());
 
     }
 
     /**
-     * {@link CommentRepository #findCommentByAdsPkAndPk(Long, Integer)} возвращает {@code Comment} из БД <br>
-     * {@link CommentMapper #toDto(Object)} преобразует {@code comment(Entity)} в {@code commentDto(DTO)}   <br>
+     * gets commentDto by ad id and comment id
      *
-     * @see CommentMapper
-     * @see CommentDto
-     * @see Comment
+     * @param adPk - id ad
+     * @param pk   - id comment
+     * @return commentDto
      */
     @Override
-    public CommentDto getComments(Long adsPk, Integer pk) {
+    public CommentDto getComments(Long adPk, Integer pk) {
         logger.info("method CommentServiceImpl - getComments");
-        Optional<Comment> commentOptional = commentRepository.findCommentByAdsIdAndId(adsPk, pk);
+        Optional<Comment> commentOptional = commentRepository.findCommentByAdsIdAndId(adPk, pk);
         return commentOptional
                 .map(commentMapper::toDto)
                 .orElse(null);
@@ -85,29 +82,33 @@ public class CommentServiceImpl implements CommentService {
     }
 
     /**
-     * {@link CommentRepository #findCommentByAdsPkAndPk(Long, Integer)} возвращает {@code Comment} из БД <br>
+     * gets comment by ad id and comment id
      *
-     * @see Comment
+     * @param adPk - id ad
+     * @param pk   - id comment
+     * @return comment
      */
     @Override
-    public Comment getComment(Long adsPk, Integer pk) {
+    public Comment getComment(Long adPk, Integer pk) {
         logger.info("method CommentServiceImpl - getComment");
-        return commentRepository.findCommentByAdsIdAndId(adsPk, pk).orElse(null);
+        return commentRepository.findCommentByAdsIdAndId(adPk, pk).orElse(null);
     }
 
     /**
-     * {@link CommentRepository #findCommentByAdsPkAndPk(Long, Integer)} возвращает {@code Comment} из БД <br>
-     * {@link CommentRepository#save(Object)} сохраняет в БД измененный {@code Comment}. <br>
-     * {@link CommentMapper #toDto(Object)} преобразует  {@code Comment} в  {@code CommentDto} <br>
+     * update comment <br>
+     * Receive old comment by id, update and save
+     * {@link UserService #checkUserPermission(Boolean,String)} checks the access right for update comment<br>
      *
-     * @see CommentDto
-     * @see Comment
-     * @see CommentMapper
+     * @param adPk             - id ad
+     * @param pk               - id comment
+     * @param commentUpdateDto - comment with changes
+     * @param authentication   -  authentication
+     * @return commentDto
      */
     @Override
-    public CommentDto updateComments(Long adsPk, Integer pk, CommentDto commentUpdateDto, Authentication authentication) {
+    public CommentDto updateComments(Long adPk, Integer pk, CommentDto commentUpdateDto, Authentication authentication) {
         logger.info("method CommentServiceImpl - updateComments");
-        Comment commentUpdate = commentRepository.getCommentByAdsIdAndId(adsPk, pk);
+        Comment commentUpdate = commentRepository.getCommentByAdsIdAndId(adPk, pk);
         userService.checkUserPermission(authentication, commentUpdate.getUser().getUsername());
         commentUpdate.setText(commentUpdateDto.getText());
         commentRepository.save(commentUpdate);
@@ -115,18 +116,19 @@ public class CommentServiceImpl implements CommentService {
 
     }
 
-
     /**
-     * {@link CommentRepository #getCommentByAdsPkAndPk(Long, Integer)} возвращает из БД {@code Comment} <br>
-     * {@link CommentRepository #delete(Object)} удаляет {@code Comment} из БД  <br>,
+     * delete comment<br>
+     * gets comment by ad id and comment id, delete comment from database
+     * {@link UserService #checkUserPermission(Boolean,String)} checks the access right for delete comment<br>
      *
-     * @see CommentDto
-     * @see Comment
+     * @param adPk           - id ad
+     * @param pk             - id comment
+     * @param authentication -  authentication
      */
     @Override
-    public void deleteComment(Long adsPk, Integer pk, Authentication authentication) {
+    public void deleteComment(Long adPk, Integer pk, Authentication authentication) {
         logger.info("method CommentServiceImpl - deleteComments");
-        Comment comment = commentRepository.getCommentByAdsIdAndId(adsPk, pk);
+        Comment comment = commentRepository.getCommentByAdsIdAndId(adPk, pk);
         userService.checkUserPermission(authentication, comment.getUser().getUsername());
         commentRepository.delete(comment);
     }

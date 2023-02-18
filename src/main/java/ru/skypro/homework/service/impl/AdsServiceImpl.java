@@ -3,7 +3,6 @@ package ru.skypro.homework.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,9 +29,6 @@ import java.util.Optional;
 @Service
 public class AdsServiceImpl implements AdsService {
     private final Logger logger = LoggerFactory.getLogger(AdsServiceImpl.class);
-    @Value("${uploaded.max_file_size}")
-    private static int SIZE_LIMIT;
-    private final FileService fileService;
     private final AdsRepository adsRepository;
     private final UserServiceImpl usersService;
     private final AdsDtoMapper adsDtoMapper;
