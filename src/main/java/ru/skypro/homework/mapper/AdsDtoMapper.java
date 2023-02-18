@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING, injectionStrategy = InjectionStrategy.CONSTRUCTOR)
 public interface AdsDtoMapper {
 
-   @Mapping(source = "user.id", target = "author")
+    @Mapping(source = "user.id", target = "author")
     @Mapping(source = "id", target = "pk")
     @Mapping(source = "image", target = "image", qualifiedByName = "getReferencesForImages")
     AdsDto toDto(Ads ads);
@@ -20,7 +20,7 @@ public interface AdsDtoMapper {
 
     @Named("getReferencesForImages")
     default List<String> getReferencesForImages(List<Image> image) {
-        if(image == null || image.isEmpty()){
+        if (image == null || image.isEmpty()) {
             return null;
         }
         return image.stream().map(i -> "/image/" + i.getId()).collect(Collectors.toList());

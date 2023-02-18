@@ -12,15 +12,11 @@ public interface CreateAdsDtoMapper {
 
     @Mapping(target = "id", ignore = true)
     Ads toModel(CreateAdsDto createAdsDto, User user);
-    Ads toModel(CreateAdsDto createAdsDto);
 
     @AfterMapping
     default void getUser(@MappingTarget Ads ads, User user) {
         ads.setUser(user);
     }
-
-
-    CreateAdsDto toDto(Ads entity);
 
 
 }
