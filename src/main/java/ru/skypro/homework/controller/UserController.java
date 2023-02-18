@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -13,7 +14,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.PasswordDto;
 import ru.skypro.homework.dto.UserDto;
+import ru.skypro.homework.entity.User;
 import ru.skypro.homework.service.UserService;
+import ru.skypro.homework.service.AvatarService;
 
 @RestController
 @CrossOrigin(value = "http://localhost:3000")
@@ -22,8 +25,11 @@ public class UserController {
     private final Logger logger = LoggerFactory.getLogger(UserController.class);
     private final UserService userService;
 
-    public UserController(UserService userService) {
+    private final AvatarService avatarService;
+
+    public UserController(UserService userService, AvatarService avatarService) {
         this.userService = userService;
+        this.avatarService = avatarService;
     }
 
     @PatchMapping("/me")
@@ -73,14 +79,24 @@ public class UserController {
     }
 
     @PatchMapping(value = "/me/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PreAuthorize("isAuthenticated()")
     @Operation(summary = "updateUserImage",
             responses = {
                     @ApiResponse(responseCode = "200", content = @Content),
+                    @ApiResponse(responseCode = "401", content = @Content),
+                    @ApiResponse(responseCode = "403", content = @Content),
                     @ApiResponse(responseCode = "404", content = @Content)
             })
-    public ResponseEntity<String> updateUserImage(@RequestPart MultipartFile image) {
-        logger.info("Processing updateUserImage Controller");
-        String filePath = "";
-        return ResponseEntity.ok(String.format("{\"data\":{ \"image\": \"%s\"}}", filePath));
+    public ResponseEntity<HttpStatus> updateUsersImage(@RequestParam MultipartFile image, Authentication authentication) {
+        logger.info("method UserController - updateImage");
+        avatarService.updateAvatar(image, authentication);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @GetMapping(value = "/avatar/{id}", produces = {MediaType.IMAGE_PNG_VALUE})
+    public ResponseEntity<byte[]> getAvatarUser(@PathVariable Long id) {
+        logger.info("UserController - getAvatarUser");
+        return ResponseEntity.ok(avatarService.getAvatar(id));
     }
 }
+

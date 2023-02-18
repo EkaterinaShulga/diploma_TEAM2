@@ -6,7 +6,8 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 /**
- * имеет связь по внешнему ключу  с {@code User(Entity)} и с {@code Ads(Entity)}
+ * Comment - entity <br>
+ * linked by foreign keys with {@code User(Entity)} and {@code Ads(Entity)}
  */
 
 @Entity

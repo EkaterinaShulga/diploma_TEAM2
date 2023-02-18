@@ -12,7 +12,8 @@ import ru.skypro.homework.entity.Comment;
 import java.util.List;
 
 /**
- * преобразует {@code Comment(Entity)} в {@code CommentDto(DTO)} и обратно <br>
+ * converts {@code Comment(Entity)} in {@code CommentDto(DTO)} and <br>
+ * converts {@code CommentDto(DTO)} in {@code Comment(Entity)}  <br>
  *
  * @see Comment
  * @see CommentDto

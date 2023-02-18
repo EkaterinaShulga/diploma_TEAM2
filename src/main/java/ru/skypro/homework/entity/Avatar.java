@@ -4,25 +4,25 @@ import lombok.Data;
 
 import javax.persistence.*;
 
-/**
- * Image for ads - entity <br>
- * linked by foreign key with {@code Ads(Entity)}
- */
 
+/**
+ * Avatar for user - entity <br>
+ * linked by foreign key with {@code User(Entity)}
+ */
 @Data
 @Entity
-@Table(name = "Images")
-public class Image {
-
+@Table(name = "Avatar")
+public class Avatar {
     private Long fileSize;
     private String mediaType;
-    private byte[] image;
+    private byte[] avatar;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne()
-    @JoinColumn(name = "ads_id")
-    Ads ads;
+    @OneToOne()
+    @JoinColumn(name = "user_id")
+    User user;
+
 }
