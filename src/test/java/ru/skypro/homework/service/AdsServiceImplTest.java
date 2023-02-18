@@ -23,6 +23,7 @@ import ru.skypro.homework.mapper.CreateAdsDtoMapperImpl;
 import ru.skypro.homework.repository.AdsRepository;
 import ru.skypro.homework.service.impl.AdsServiceImpl;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -96,8 +97,8 @@ public class AdsServiceImplTest {
 
 
     @Test
-    void createAdsTest() {
-        Ads adsMock = createAdsDtoMapper.toModel(createAdsDto);
+    void createAdsTest() throws IOException {
+        Ads adsMock = createAdsDtoMapper.toModel(createAdsDto, defaultUser);
         when(adsRepository.countByTitleAndUserId(anyString(), anyLong())).thenReturn(0);
         when(adsRepository.save(any())).thenReturn(adsMock);
         when(imageService.createImage(any(), any())).thenReturn(image);
@@ -133,7 +134,7 @@ public class AdsServiceImplTest {
 
     @Test
     void updateAdsTest() {
-        Ads adsMock = createAdsDtoMapper.toModel(createAdsDto);
+        Ads adsMock = createAdsDtoMapper.toModel(createAdsDto, defaultUser);
         when(adsRepository.getReferenceById(anyLong())).thenReturn(ads2);
         doNothing().when(userService).checkUserPermission(authentication, defaultUser.getUsername());
         when(adsRepository.save(any())).thenReturn(adsMock);
