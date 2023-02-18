@@ -74,7 +74,9 @@ public class AdsController {
     @Operation(
             summary = "removeAds",
             responses = {
-                    @ApiResponse(responseCode = "204", content = @Content())
+                    @ApiResponse(responseCode = "204", content = @Content()),
+                    @ApiResponse(responseCode = "401", content = @Content()),
+                    @ApiResponse(responseCode = "403", content = @Content())
             }
     )
     @PreAuthorize("isAuthenticated()")
@@ -95,7 +97,8 @@ public class AdsController {
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "ads"),
             responses = {
                     @ApiResponse(responseCode = "200", useReturnTypeSchema = true),
-                    @ApiResponse(responseCode = "204", content = @Content()),
+                    @ApiResponse(responseCode = "401", content = @Content()),
+                    @ApiResponse(responseCode = "403", content = @Content()),
                     @ApiResponse(responseCode = "404", content = @Content())
             }
     )
@@ -121,11 +124,13 @@ public class AdsController {
             summary = "addAds",
             responses = {
                     @ApiResponse(responseCode = "200", useReturnTypeSchema = true),
-                    @ApiResponse(responseCode = "201", content = @Content())
+                    @ApiResponse(responseCode = "401", content = @Content()),
+                    @ApiResponse(responseCode = "403", content = @Content()),
+                    @ApiResponse(responseCode = "404", content = @Content())
             }
     )
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<AdsDto> addAds(@RequestPart(value = "properties") CreateAdsDto createAdsDto,//изменила
+    public ResponseEntity<AdsDto> addAds(@RequestPart(value = "properties") CreateAdsDto createAdsDto,
                                          @RequestPart(value = "image") MultipartFile image,
                                          Authentication authentication) throws IOException {
         logger.info("Processing addAds Controller");
@@ -142,6 +147,8 @@ public class AdsController {
             summary = "getAdsMe",
             responses = {
                     @ApiResponse(responseCode = "200", useReturnTypeSchema = true),
+                    @ApiResponse(responseCode = "401", content = @Content()),
+                    @ApiResponse(responseCode = "403", content = @Content()),
                     @ApiResponse(responseCode = "404", content = @Content())
             }
     )
@@ -160,6 +167,8 @@ public class AdsController {
             summary = "addComments",
             responses = {
                     @ApiResponse(responseCode = "200", useReturnTypeSchema = true),
+                    @ApiResponse(responseCode = "401", content = @Content()),
+                    @ApiResponse(responseCode = "403", content = @Content()),
                     @ApiResponse(responseCode = "404", content = @Content())
             }
     )
@@ -174,6 +183,8 @@ public class AdsController {
             summary = "deleteComments",
             responses = {
                     @ApiResponse(responseCode = "200", useReturnTypeSchema = true),
+                    @ApiResponse(responseCode = "401", content = @Content()),
+                    @ApiResponse(responseCode = "403", content = @Content()),
                     @ApiResponse(responseCode = "404", content = @Content())
             }
     )
@@ -191,8 +202,6 @@ public class AdsController {
 
     }
 
-
-    @GetMapping("/{ad_pk}/comments")
     @Operation(
             summary = "getAllCommentsByAdsPk",
             responses = {
@@ -200,14 +209,13 @@ public class AdsController {
                     @ApiResponse(responseCode = "404", content = @Content())
             }
     )
+    @GetMapping("/{ad_pk}/comments")
     public ResponseEntity<ResponseWrapperCommentDto> getAllCommentsByAdsPk(@PathVariable("ad_pk") Long adPk) {
         logger.info("method AdsController - getAllCommentsByAdsPk");
         ResponseWrapperCommentDto allCommentsDto = commentService.getCommentsByAdsPk(adPk);
         return ResponseEntity.ok(allCommentsDto);
     }
 
-
-    @GetMapping("/{ad_pk}/comments/{id}")
     @Operation(
             summary = "getComments",
             responses = {
@@ -215,6 +223,7 @@ public class AdsController {
                     @ApiResponse(responseCode = "404", content = @Content())
             }
     )
+    @GetMapping("/{ad_pk}/comments/{id}")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<CommentDto> getComments(@PathVariable("ad_pk") Long adPk,
                                                   @PathVariable("id") Integer commentPk) {
@@ -228,6 +237,15 @@ public class AdsController {
         return ResponseEntity.ok(commentDto);
     }
 
+    @Operation(
+            summary = "updateComments",
+            responses = {
+                    @ApiResponse(responseCode = "200", useReturnTypeSchema = true),
+                    @ApiResponse(responseCode = "401", content = @Content()),
+                    @ApiResponse(responseCode = "403", content = @Content()),
+                    @ApiResponse(responseCode = "404", content = @Content())
+            }
+    )
     @PreAuthorize("isAuthenticated()")
     @PatchMapping(value = "/{ad_pk}/comments/{id}")
     public ResponseEntity<CommentDto> updateComments(@PathVariable("ad_pk") Long adPk,
@@ -244,6 +262,11 @@ public class AdsController {
         }
     }
 
+    @Operation(
+            responses = {
+                    @ApiResponse(responseCode = "200", useReturnTypeSchema = true)
+            }
+    )
     @GetMapping()
     public ResponseEntity<ResponseWrapperAdsDto> getAllAds() {
         logger.info("method AdsController - getAllAds");
@@ -251,12 +274,24 @@ public class AdsController {
         return ResponseEntity.ok(allAds);
     }
 
+
+    @Operation(
+            summary = "updateAdsImage",
+            responses = {
+                    @ApiResponse(responseCode = "200", useReturnTypeSchema = true),
+                    @ApiResponse(responseCode = "404", content = @Content())
+            }
+    )
     @PatchMapping(value = "/{id}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<byte[]> updateImage(@PathVariable("id") Long id,
+    public ResponseEntity<byte[]> updateAdsImage(@PathVariable("id") Long id,
                                               @RequestParam MultipartFile image,
                                               Authentication authentication) {
         logger.info("method AdsController - updateImage");
+        byte[] photo = imageService.getImage(id);
+        if(photo == null){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
         byte[] imageUpdate = imageService.updateImage(id, image, authentication);
         return ResponseEntity.ok(imageUpdate);
     }

@@ -8,9 +8,9 @@ import ru.skypro.homework.entity.Image;
 
 public interface ImageService {
 
-     byte[] getImage(Long id);
-     Image createImage(MultipartFile file, Ads ads);
+    byte[] getImage(Long id);
 
+    Image createImage(MultipartFile file, Ads ads);
 
-     byte[] updateImage(Long id, MultipartFile file, Authentication authentication);
+    byte[] updateImage(Long id, MultipartFile file, Authentication authentication);
 }

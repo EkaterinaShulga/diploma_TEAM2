@@ -3,8 +3,11 @@ package ru.skypro.homework.dto;
 import lombok.Data;
 
 /**
- * значение поля {@code author} соответствует значению поля id {@code User}<br>
- * поле {@code pk == id CommentDto}<br>
+ * CommentDto - dto, schema : <br>
+ * author - id user <br>
+ * pk - id CommentDto <br>
+ * createdAt - time create comment <br>
+ * text - comment text
  */
 @Data
 public class CommentDto {

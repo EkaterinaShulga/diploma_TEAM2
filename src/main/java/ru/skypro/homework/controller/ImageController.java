@@ -1,10 +1,12 @@
 package ru.skypro.homework.controller;
 
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.skypro.homework.service.AvatarService;
 import ru.skypro.homework.service.ImageService;
 
 @Slf4j
@@ -16,12 +18,13 @@ public class ImageController {
 
     private final ImageService imageService;
 
-      @GetMapping(value = "/{id}", produces = {MediaType.IMAGE_PNG_VALUE})
+   @GetMapping(value = "/{id}", produces = {MediaType.IMAGE_PNG_VALUE})
     public ResponseEntity<byte[]> getImageAds(@PathVariable Long id) {
-          log.info("ImageController - getImageAds");
-          return ResponseEntity.ok(imageService.getImage(id));
-          }
-
+        log.info("ImageController - getImageAds");
+        return ResponseEntity.ok(imageService.getImage(id));
     }
+
+
+}
 
 
