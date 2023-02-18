@@ -93,6 +93,20 @@ Content-Type: application/json
 Authorization: Basic user password
 
 
+###
+POST https://localhost:8080/ads
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="properties"
+Content-Type: text/plain
+
+Name
+--WebAppBoundary
+Content-Disposition: form-data; name="data"; filename="data.json"
+Content-Type: application/json
 
 
+
+--WebAppBoundary
 
