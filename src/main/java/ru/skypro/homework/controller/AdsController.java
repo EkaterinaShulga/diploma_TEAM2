@@ -198,7 +198,9 @@ public class AdsController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
         commentService.deleteComment(adPk, commentPk, authentication);
+
         return ResponseEntity.status(HttpStatus.OK).build();
+
 
     }
 
