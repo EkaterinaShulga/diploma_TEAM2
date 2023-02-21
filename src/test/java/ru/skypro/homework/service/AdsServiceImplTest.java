@@ -63,6 +63,7 @@ public class AdsServiceImplTest {
     private Ads ads2;
     private CreateAdsDto createAdsDto;
 
+
     @BeforeEach
     void init() {
         defaultUser = new User();

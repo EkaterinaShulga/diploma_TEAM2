@@ -94,6 +94,7 @@ public class UserController {
     }
 
     @GetMapping(value = "/avatar/{id}", produces = {MediaType.IMAGE_PNG_VALUE})
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<byte[]> getAvatarUser(@PathVariable Long id) {
         logger.info("UserController - getAvatarUser");
         return ResponseEntity.ok(avatarService.getAvatar(id));

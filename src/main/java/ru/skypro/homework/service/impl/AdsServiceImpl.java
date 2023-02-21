@@ -20,6 +20,7 @@ import ru.skypro.homework.mapper.FullAdsDtoMapper;
 import ru.skypro.homework.repository.AdsRepository;
 import ru.skypro.homework.service.AdsService;
 import ru.skypro.homework.service.ImageService;
+import ru.skypro.homework.service.UserService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +31,7 @@ import java.util.Optional;
 public class AdsServiceImpl implements AdsService {
     private final Logger logger = LoggerFactory.getLogger(AdsServiceImpl.class);
     private final AdsRepository adsRepository;
-    private final UserServiceImpl usersService;
+    private final UserService usersService;
     private final AdsDtoMapper adsDtoMapper;
     private final CreateAdsDtoMapper createAdsDtoMapper;
     private final FullAdsDtoMapper fullAdsDtoMapper;
